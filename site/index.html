@@ -1,4 +1,8 @@
+<!doctype html>
+<html lang="en">
+<head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gal Cohen Raviv</title>
 <meta name="description" content="Let's build something amazing together">
 <meta property="og:title" content="Gal Cohen Raviv">
@@ -117,6 +121,13 @@ p { margin: 0; text-wrap: pretty; }
 .nav a.in-link::after { display: none; }
 .nav a.in-link:hover { color: #0a66c2; transform: translateY(-2px); }
 .in-link svg { width: 16px; height: 16px; }
+@media (max-width: 440px) {
+  .bar .wrap { gap: 10px; }
+  .brand { font-size: .95rem; }
+  .nav { gap: 10px; }
+  .nav a { font-size: .75rem; }
+  .nav a.in-link { width: 28px; margin-right: -4px; }
+}
 
 /* ---------- hero ---------- */
 .hero { position: relative; padding-block: clamp(56px, 9vw, 120px) clamp(48px, 7vw, 96px); overflow: hidden; }
@@ -591,6 +602,8 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
   html { scroll-behavior: auto; }
 }
 </style>
+</head>
+<body>
 
 <header class="bar" id="bar">
   <div class="wrap">
@@ -2025,3 +2038,5 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
   size(); readColors(); draw(); start();
 })();
 </script>
+</body>
+</html>

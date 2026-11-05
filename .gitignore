@@ -1,0 +1,17 @@
+# NDA plaintext: Fireblocks case HTML, screens and the salt. Only the encrypted copies in site/lm, site/sw, site/er are committed.
+_private/
+
+# Raw source material: CV and case-study PDFs, extracted pages
+_src/
+
+# Generated single-file build (rebuild with: python -I _tools/build_share.py)
+share/
+
+# Local Claude settings
+.claude/settings.local.json
+
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+desktop.ini

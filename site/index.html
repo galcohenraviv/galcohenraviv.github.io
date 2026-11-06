@@ -129,13 +129,44 @@ p { margin: 0; text-wrap: pretty; }
   .nav a.in-link { width: 28px; margin-right: -4px; }
 }
 
-/* ---------- hero ---------- */
-.hero { position: relative; padding-block: clamp(56px, 9vw, 120px) clamp(48px, 7vw, 96px); overflow: hidden; }
-.hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.hero .wrap { position: relative; display: grid; gap: clamp(28px, 4vw, 44px); }
-.hero h1 { font-size: var(--step-3); max-width: 15ch; font-weight: 500; letter-spacing: -0.04em; }
-.hero h1 em { font-style: normal; color: var(--ink-3); }
-.hero .lede { font-size: var(--step-1); line-height: 1.55; color: var(--ink-2); max-width: 54ch; }
+/* ---------- hero: one Claude Code-style line, plus Figma-style multiplayer cursor chips ---------- */
+.hero { position: relative; overflow: hidden; display: grid; align-items: center;
+  min-height: clamp(380px, 64vh, 640px); padding-block: clamp(56px, 8vw, 104px) clamp(48px, 7vw, 88px); }
+.hero .wrap { position: relative; z-index: 1; width: 100%; }
+.hero.chipping, .hero.chipping * { cursor: none; }
+@media (max-width: 760px) { .hero { min-height: 0; padding-block: 88px 72px; } }
+.cc-title {
+  font-family: var(--f-mono); font-weight: 500; font-size: clamp(2rem, 1.05rem + 3.9vw, 4.4rem);
+  line-height: 1.12; letter-spacing: -0.045em; max-width: 19ch; text-wrap: balance;
+}
+.cc-title .pr { color: var(--accent); margin-right: .45ch; font-weight: 400; }
+.cc-title .ai { color: var(--accent); }
+.cc-title .caret {
+  display: inline-block; width: .52em; height: .92em; margin-left: .12em; vertical-align: -.1em;
+  background: var(--accent); animation: caret 1.1s steps(1) infinite;
+}
+@keyframes caret { 50% { opacity: 0; } }
+.chips { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.chip { position: absolute; left: 0; top: 0; will-change: transform; }
+.chip svg { position: absolute; left: -2px; top: -2px; width: 20px; height: 22px; overflow: visible;
+  filter: drop-shadow(0 1px 1.5px rgba(0,0,0,.25)); }
+.chip span {
+  position: absolute; left: 15px; top: 17px; white-space: nowrap; display: block;
+  font: 500 .875rem/1 var(--f-sans, inherit); letter-spacing: -0.005em; padding: 7px 11px 8px;
+  border-radius: 3px 12px 12px 12px; color: #fff; background: var(--c);
+  box-shadow: 0 1px 2px rgba(0,0,0,.12), 0 6px 16px -6px color-mix(in oklab, var(--c) 70%, transparent);
+  transform-origin: 0 0; animation: chip-in .38s cubic-bezier(.34,1.56,.64,1) both;
+}
+.chip.dark-ink span { color: #1c1b19; }
+.chip.out { animation: chip-out .6s ease forwards; }
+@keyframes chip-in { from { opacity: 0; transform: scale(.55); } }
+@keyframes chip-out { to { opacity: 0; filter: blur(3px); transform: scale(.92); } }
+@media (prefers-reduced-motion: reduce) {
+  .cc-title .caret { animation: none; }
+  .chip span { animation: none; }
+  .chip.out { animation: chip-fade .4s ease forwards; }
+  @keyframes chip-fade { to { opacity: 0; } }
+}
 
 .intro > * { animation: rise .9s var(--ease) both; }
 .intro > *:nth-child(2) { animation-delay: .08s; }
@@ -270,84 +301,6 @@ a:hover .pv-win { transform: rotate(var(--r, 0deg)) translateY(-3px); }
 a:hover .pv-card { transform: rotate(var(--r, 0deg)) translateY(-10px) scale(1.035); box-shadow: 0 0 0 1px rgba(20, 24, 33, .08), 0 14px 28px -12px rgba(20, 24, 40, .28), 0 50px 90px -24px rgba(20, 24, 40, .5); }
 a:hover .pv-phone { transform: rotate(var(--r, 0deg)) translateY(-8px); }
 @media (max-width: 520px) { .pv-bar { height: 11px; } }
-
-/* ---------- hero mascot: a pixel-art character performing short acts on the right side of the hero ---------- */
-.mascot-stage { position: absolute; top: 0; left: 56%; right: 0; height: 70%; z-index: 1; pointer-events: none; overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 64px); mask-image: linear-gradient(90deg, transparent, #000 64px); }
-.hero .wrap { z-index: 2; }
-@media (max-width: 760px) { .mascot-stage { display: none; } }
-.actor { position: absolute; left: 0; top: 0; will-change: transform; }
-.actor svg { display: block; width: 100%; height: 100%; overflow: visible; shape-rendering: crispEdges; }
-.m-body, .m-leg, .m-arm { fill: #e2763f; }
-.m-shade { fill: #1c1b19; }
-.m-eyes { transform-box: fill-box; transform-origin: center; animation: m-blink 4.6s steps(1) infinite; }
-@keyframes m-blink { 0%, 95%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.15); } }
-.m-shades, .m-happy { display: none; }
-.cool .m-shades, .happy .m-happy { display: inline; }
-.cool .m-eyes, .happy .m-eyes { display: none; }
-.walking .m-wrap { animation: m-bob .36s steps(1) infinite; }
-.walking .m-leg.a { animation: m-step .36s steps(1) infinite; }
-.walking .m-leg.b { animation: m-step .36s steps(1) infinite .18s; }
-@keyframes m-bob { 0% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-@keyframes m-step { 0% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-.galloping .m-all { animation: m-gallop .4s steps(1) infinite; }
-@keyframes m-gallop { 0% { transform: translateY(0); } 33% { transform: translateY(-12px); } 66% { transform: translateY(-6px); } }
-.waving .m-arm.r { animation: m-wave .44s steps(1) infinite; }
-@keyframes m-wave { 0% { transform: translateY(0); } 50% { transform: translateY(-18px); } }
-.swimming .m-arm.l { animation: m-wave .5s steps(1) infinite; }
-.swimming .m-arm.r { animation: m-wave .5s steps(1) infinite .25s; }
-.m-flame { animation: m-flicker .16s steps(1) infinite; }
-@keyframes m-flicker { 0% { transform: translateY(0); } 50% { transform: translateY(6px); } }
-.m-text { font-family: var(--f-pixel); font-size: 6.2px; letter-spacing: .2px; fill: #fff; }
-.m-bubble {
-  position: absolute; left: 50%; top: -8%; translate: -100% 0; opacity: 0; white-space: nowrap;
-  font-family: var(--f-pixel); font-size: .72rem; color: var(--ink); background: var(--paper);
-  border: 2px solid var(--ink); padding: 6px 10px; box-shadow: 4px 4px 0 color-mix(in oklab, var(--ink) 25%, transparent);
-}
-.waves {
-  position: absolute; left: 0; right: 0; bottom: 0; height: 34px; opacity: 0;
-  background:
-    linear-gradient(90deg, #9ccff7 0 50%, transparent 50%) 0 0 / 24px 6px repeat-x,
-    linear-gradient(#9ccff7, #9ccff7) 0 6px / 100% 100% no-repeat;
-  image-rendering: pixelated; animation: m-waves 1.2s steps(6) infinite;
-}
-@keyframes m-waves { to { background-position: 24px 0, 0 6px; } }
-.px { position: absolute; width: 7px; height: 7px; background: #e2763f; }
-.px.smoke { background: color-mix(in oklab, var(--ink) 18%, var(--paper)); width: 10px; height: 10px; }
-.px.water { background: #6bb6f5; }
-/* movie-style acts: poses, props and scenery */
-.flying .m-arm.l { transform: translate(-8px, -12px); }
-.flying .m-arm.r { transform: translate(8px, -12px); }
-.playing .m-arm.l { animation: m-wave .18s steps(1) infinite; }
-.playing .m-arm.r { animation: m-wave .18s steps(1) infinite .09s; }
-.silhouette svg { filter: brightness(0); }
-.prop { position: absolute; left: 0; top: 0; will-change: transform; }
-.prop svg { display: block; overflow: visible; shape-rendering: crispEdges; }
-.m-sign { font-family: var(--f-pixel); font-size: 13px; fill: #1c1b19; }
-.m-scr { font-family: var(--f-pixel); font-size: 5px; fill: #ffd23f; }
-.scr-a { animation: m-arc .5s steps(1) infinite; }
-@keyframes m-arc { 50% { opacity: .25; } }
-.scr-b { display: none; }
-.win .scr-a { display: none; }
-.win .scr-b { display: inline; animation: m-arc .3s steps(1) infinite; }
-.trail { position: absolute; height: 3px; width: 0; background: linear-gradient(90deg, #ffd27a, #ff9a3c 40%, transparent); }
-.flash { position: absolute; inset: 0; background: var(--paper); opacity: 0; }
-.sea, .rain { -webkit-mask-image: radial-gradient(75% 70% at 55% 50%, #000 55%, transparent 100%); mask-image: radial-gradient(75% 70% at 55% 50%, #000 55%, transparent 100%); }
-.sea { position: absolute; inset: 0; opacity: 0; background: linear-gradient(color-mix(in oklab, #7cc4f5 14%, transparent), color-mix(in oklab, #3d8fd6 30%, transparent)); }
-.rain { position: absolute; inset: 0; opacity: 0; overflow: hidden; }
-.rcol { position: absolute; top: 0; font-family: var(--f-pixel); font-size: 11px; line-height: 13px; color: color-mix(in oklab, #22b07d 60%, transparent); white-space: pre; }
-.bullet { position: absolute; width: 12px; height: 4px; background: var(--ink-2); box-shadow: 12px 0 0 -1px color-mix(in oklab, var(--ink-2) 40%, transparent); }
-.step { position: absolute; opacity: 0; background: color-mix(in oklab, var(--ink) 9%, var(--paper-2)); box-shadow: inset 0 3px 0 color-mix(in oklab, var(--ink) 14%, transparent); }
-.drizzle { position: absolute; inset: 0; opacity: 0; background: repeating-linear-gradient(105deg, transparent 0 22px, color-mix(in oklab, #3d8fd6 35%, transparent) 22px 24px, transparent 24px 46px);
-  background-size: 46px 46px; animation: m-drizzle .5s steps(4) infinite; }
-@keyframes m-drizzle { to { background-position: -12px 46px; } }
-.px.note { background: var(--ink-2); width: 6px; height: 10px; box-shadow: 6px -4px 0 -1px var(--ink-2); }
-.tile { position: absolute; height: 8px; opacity: 0; background: #ff6fa8; animation: m-tile 1s steps(1) infinite; }
-@keyframes m-tile { 0% { background: #ff6fa8; } 33% { background: #ffd23f; } 66% { background: #4f9dff; } }
-.wire { position: absolute; top: 0; width: 2px; height: 0; background: var(--ink-3); }
-.disco .m-arm.r { transform: translate(8px, -22px); }
-.disco .m-arm.l { transform: translate(-4px, 8px); }
-.wind { position: absolute; height: 3px; width: 46px; background: color-mix(in oklab, var(--ink) 22%, transparent); }
 
 /* ---------- about ---------- */
 .about-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 88px); }
@@ -514,7 +467,7 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
 
     /* hero drifts up and softens as it leaves */
     .hero { view-timeline-name: --hero; }
-    .hero > .wrap, .hero canvas { animation: hero-out linear both; animation-timeline: --hero; animation-range: exit 0% exit 100%; }
+    .hero > .wrap { animation: hero-out linear both; animation-timeline: --hero; animation-range: exit 0% exit 100%; }
 
     /* private cards arrive one after another */
     .trio .priv:nth-child(2) { animation-range: entry 8% entry 38%; }
@@ -626,12 +579,9 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
 <!-- ======================= HOME ======================= -->
 <main class="view" id="home">
   <section class="hero" id="top">
-    <canvas id="gaze" aria-hidden="true"></canvas>
-    <div class="mascot-stage" id="mascotStage" aria-hidden="true"></div>
+    <div class="chips" id="chips" aria-hidden="true"></div>
     <div class="wrap intro">
-      <span class="label">Product Designer <span class="amp">&amp;</span> Product Builder</span>
-      <h1>I design complex products <em>and build their front-end with AI.</em></h1>
-      <p class="lede">Trading desks, crypto swaps, bank loans. I design the screens, then ship the code myself with Cursor and Claude Code.</p>
+      <h1 class="cc-title"><span class="pr" aria-hidden="true">&gt;</span>Hi, I'm Gal, a Product Designer &amp; Builder <span class="ai">with AI</span>.<span class="caret" aria-hidden="true"></span></h1>
     </div>
   </section>
 
@@ -1125,7 +1075,6 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
     const next = isDark() ? 'light' : 'dark';
     root.dataset.theme = next;
     store.set('theme', next);
-    readColors();
   });
 
   /* ---------- sticky bar border ---------- */
@@ -1493,549 +1442,56 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
     });
   }
 
-  /* ---------- hero mascot: pixel-art acts, 8-10 s each, 2-3 s apart ---------- */
+  /* ---------- hero: Figma-style multiplayer cursor chips ---------- */
   (() => {
-    const stage = document.getElementById('mascotStage');
-    const heroSec = stage && stage.closest('.hero');
-    const lede = heroSec && heroSec.querySelector('.lede');
-    if (!stage || reduce || !matchMedia('(min-width: 761px)').matches) return;
-
-    const S = 110;                       // character height in px; svg viewBox is 200 x 170 units around a 100-unit body
-    const VW = 200, VH = 170, OX = 50, OY = 60, FEET = 96, U = S / 100;
-    const EW = S * VW / 100, EH = S * VH / 100;
-    const wait = ms => new Promise(r => setTimeout(r, ms));
-    const rnd = (a, b) => a + Math.random() * (b - a);
-    let W = 0, H = 0, roomy = false;
-    // the stage starts just right of the headline and intro text, so the character never crosses them
-    const textEls = [heroSec.querySelector('h1'), heroSec.querySelector('.lede')].filter(Boolean);
-    const measure = () => {
-      const hr = heroSec.getBoundingClientRect();
-      const right = Math.max(...textEls.map(el => {
-        const r = document.createRange(); r.selectNodeContents(el);
-        return Math.max(0, ...[...r.getClientRects()].map(c => c.right));
-      }));
-      stage.style.left = Math.round(right - hr.left + 32) + 'px';
-      W = stage.clientWidth;
-      roomy = W >= 260;
-      H = lede ? lede.getBoundingClientRect().bottom - hr.top + 24 : heroSec.clientHeight * .7;
-      stage.style.height = Math.max(160, H) + 'px';
-      H = stage.clientHeight;
+    const hero = document.getElementById('top'), layer = document.getElementById('chips');
+    if (!hero || !layer) return;
+    const WORDS = ['Product Design', 'Design Systems', 'AI-First UI', 'Claude Code', 'Figma', 'Fintech', 'Crypto',
+      'Cybersecurity', 'Banking', 'Payments', 'B2B SaaS', 'B2C Apps', 'Front-end', 'Prototyping', 'Web3', 'Micro-interactions'];
+    // Figma multiplayer palette; amber takes dark ink for contrast
+    const COLORS = [['#9747FF'], ['#0C8CE9'], ['#0E9F98'], ['#F2545B'], ['#FFB224', 'dark-ink'], ['#14AE5C']];
+    const SPAWN_DIST = 40, SPAWN_GAP = 1000, IDLE = 2000, TRAIL_LIFE = 900;
+    let bag = [], lastWord = '', colorAt = Math.floor(Math.random() * COLORS.length);
+    const nextWord = () => {
+      if (!bag.length) { bag = WORDS.slice().sort(() => Math.random() - .5); if (bag[0] === lastWord) bag.push(bag.shift()); }
+      return (lastWord = bag.shift());
     };
-    // place the character so its feet (centre-bottom) sit at x, y in stage pixels, snapped to a 4px pixel grid
-    const snap = v => Math.round(v / 4) * 4;
-    const T = (x, y, extra = '', sc = 1) => `translate(${snap(x - EW * sc * (OX + 50) / VW)}px, ${snap(y - EH * sc * (OY + FEET) / VH)}px) ${extra}`;
-    const r = (x, y, w, h, c = '') => `<rect x="${x}" y="${y}" width="${w}" height="${h}"${c ? ` fill="${c}"` : ''}/>`;
-
-    // body cells on a 6-unit pixel grid: 10 x 8 body, 2 x 2 arms, four 1 x 3 legs
-    const CELLS = [];
-    for (let i = 0; i < 10; i++) for (let j = 0; j < 8; j++) CELLS.push([20 + i * 6, 30 + j * 6]);
-    for (const ax of [8, 14, 80, 86]) for (const ay of [48, 54]) CELLS.push([ax, ay]);
-    for (const lx of [26, 38, 56, 68]) for (let j = 0; j < 3; j++) CELLS.push([lx, 78 + j * 6]);
-
-    const BODY = `
-      <g class="m-wrap">
-        <g class="m-legs"><rect class="m-leg a" x="26" y="78" width="6" height="18"/><rect class="m-leg b" x="38" y="78" width="6" height="18"/><rect class="m-leg a" x="56" y="78" width="6" height="18"/><rect class="m-leg b" x="68" y="78" width="6" height="18"/></g>
-        <rect class="m-arm l" x="8" y="48" width="12" height="12"/><rect class="m-arm r" x="80" y="48" width="12" height="12"/>
-        <rect class="m-body" x="20" y="30" width="60" height="48"/>
-        ${r(20, 30, 60, 6, 'rgba(255,255,255,.14)')}${r(20, 72, 60, 6, 'rgba(0,0,0,.08)')}
-        <g class="m-eyes">${r(32, 44, 7, 7, '#1c1b19')}${r(61, 44, 7, 7, '#1c1b19')}</g>
-        <g class="m-shades">${r(24, 40, 52, 4, '#1c1b19')}${r(26, 44, 20, 5, '#1c1b19')}${r(28, 49, 16, 3, '#1c1b19')}${r(30, 52, 10, 2, '#1c1b19')}
-          ${r(54, 44, 20, 5, '#1c1b19')}${r(56, 49, 16, 3, '#1c1b19')}${r(58, 52, 10, 2, '#1c1b19')}
-          ${r(29, 45, 2, 2, '#fff')}${r(31, 47, 2, 2, '#fff')}${r(33, 45, 2, 2, '#fff')}${r(35, 47, 2, 2, '#fff')}
-          ${r(57, 45, 2, 2, '#fff')}${r(59, 47, 2, 2, '#fff')}${r(61, 45, 2, 2, '#fff')}${r(63, 47, 2, 2, '#fff')}</g>
-        <g class="m-happy">${r(31, 42, 3, 3, '#1c1b19')}${r(34, 45, 3, 3, '#1c1b19')}${r(37, 48, 3, 3, '#1c1b19')}${r(34, 51, 3, 3, '#1c1b19')}${r(31, 54, 3, 3, '#1c1b19')}
-          ${r(66, 42, 3, 3, '#1c1b19')}${r(63, 45, 3, 3, '#1c1b19')}${r(60, 48, 3, 3, '#1c1b19')}${r(63, 51, 3, 3, '#1c1b19')}${r(66, 54, 3, 3, '#1c1b19')}</g>
-      </g>`;
-
-    const PROPS = {
-      hat: `<g class="m-hat">${r(14, 22, 72, 8, '#1c1b19')}${r(20, -14, 60, 36, '#1c1b19')}${r(20, 12, 60, 6, '#e2763f')}
-            <text class="m-text" x="50" y="4" text-anchor="middle">HIRE THIS GUY</text></g>`,
-      goggles: `<g>${r(20, 46, 60, 3, '#1c1b19')}${r(28, 40, 16, 14, '#1c1b19')}${r(56, 40, 16, 14, '#1c1b19')}${r(31, 43, 10, 8, '#8fd0ff')}${r(59, 43, 10, 8, '#8fd0ff')}${r(32, 44, 3, 3, '#fff')}${r(60, 44, 3, 3, '#fff')}</g>`,
-      plane: `<g>${r(-24, 96, 30, 6, '#fff')}${r(6, 90, 36, 12, '#fff')}${r(42, 84, 36, 12, '#fff')}${r(78, 78, 30, 12, '#fff')}${r(108, 72, 24, 12, '#fff')}${r(132, 72, 6, 6, '#fff')}
-              ${r(20, 102, 36, 6, '#d9dce3')}${r(56, 96, 36, 6, '#d9dce3')}${r(92, 90, 24, 6, '#d9dce3')}${r(-24, 102, 160, 1, 'rgba(0,0,0,.08)')}</g>`,
-      horse: `<g>${r(14, 100, 8, 8, '#5b3a20')}${r(22, 94, 8, 8, '#8a5a34')}${r(30, 88, 8, 8, '#8a5a34')}${r(38, 82, 8, 8, '#8a5a34')}${r(80, 66, 8, 8, '#8a5a34')}${r(88, 60, 8, 8, '#8a5a34')}
-              ${r(94, 36, 20, 24, '#b07842')}${r(114, 42, 14, 14, '#b07842')}${r(124, 48, 6, 8, '#b07842')}${r(90, 34, 8, 20, '#5b3a20')}${r(104, 40, 4, 4, '#1c1b19')}${r(98, 30, 6, 6, '#b07842')}</g>`,
-      balloon: `<g>${r(88, 48, 2, 12, '#7d7a73')}${r(90, 30, 2, 18, '#7d7a73')}${r(92, 14, 2, 16, '#7d7a73')}
-              ${r(86, -30, 24, 36, '#4f7cff')}${r(80, -24, 36, 24, '#4f7cff')}${r(92, 6, 12, 6, '#4f7cff')}${r(88, -24, 6, 10, '#9bb8ff')}</g>`,
-      jetpack: `<g>${r(8, 42, 12, 34, '#8b8f99')}${r(80, 42, 12, 34, '#8b8f99')}${r(8, 42, 12, 4, '#b4b8c1')}${r(80, 42, 12, 4, '#b4b8c1')}
-              <g class="m-flame">${r(9, 76, 10, 8, '#ffb02e')}${r(11, 84, 6, 8, '#ff7a1a')}${r(81, 76, 10, 8, '#ffb02e')}${r(83, 84, 6, 8, '#ff7a1a')}${r(12, 76, 4, 6, '#fff3c4')}${r(84, 76, 4, 6, '#fff3c4')}</g></g>`,
-      board: `<g class="m-board">${r(14, 96, 72, 6, '#1c1b19')}${r(10, 92, 6, 6, '#1c1b19')}${r(84, 92, 6, 6, '#1c1b19')}${r(22, 102, 8, 8, '#d6d8de')}${r(70, 102, 8, 8, '#d6d8de')}</g>`,
-      chute: `<g class="m-chute">${r(20, -54, 60, 8, '#e0483e')}${r(8, -46, 84, 8, '#e0483e')}${r(0, -38, 100, 14, '#e0483e')}${r(26, -54, 12, 8, '#fff')}${r(62, -54, 12, 8, '#fff')}${r(14, -46, 14, 8, '#fff')}${r(72, -46, 14, 8, '#fff')}
-              ${r(4, -24, 2, 20, '#7d7a73')}${r(8, -4, 2, 20, '#7d7a73')}${r(12, 16, 2, 30, '#7d7a73')}${r(94, -24, 2, 20, '#7d7a73')}${r(90, -4, 2, 20, '#7d7a73')}${r(86, 16, 2, 30, '#7d7a73')}</g>`
+    let active = null, idleT = 0, lastX = 0, lastY = 0, lastSpawn = -Infinity, px = 0, py = 0, raf = 0;
+    const place = (el, x, y) => { el.style.transform = `translate3d(${x}px, ${y}px, 0)`; };
+    const retire = (el, delay) => {
+      if (!el || el.dataset.out) return;
+      el.dataset.out = '1';
+      setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 650); }, delay);
     };
-
-    function actor(props, behind = '', mood = '', sc = 1) {
+    const spawn = (x, y) => {
+      if (active) retire(active, TRAIL_LIFE);          // the previous chip stays where it was, like a collaborator, then dissolves
+      colorAt = (colorAt + 1) % COLORS.length;          // always a different colour from the last chip
+      const [c, ink] = COLORS[colorAt];
       const el = document.createElement('div');
-      el.className = 'actor' + (mood ? ' ' + mood : '');
-      el.style.width = EW * sc + 'px'; el.style.height = EH * sc + 'px';
-      el.style.transformOrigin = `${EW * sc * (OX + 50) / VW}px ${EH * sc * (OY + FEET) / VH}px`;   // pivot at the feet
-      el.innerHTML = `<svg viewBox="${-OX} ${-OY} ${VW} ${VH}">${behind}<g class="m-all">${BODY}${props}</g></svg>`;
-      stage.append(el);
-      return el;
-    }
-    // retro motion: every move advances in discrete steps (about 12 per second)
-    const go = (el, frames, ms) =>
-      el.animate(frames.map(f => typeof f === 'string' ? { transform: f } : f), { duration: ms, easing: `steps(${Math.max(6, Math.round(ms / 85))}, end)`, fill: 'forwards' }).finished;
-    const bubble = (el, text, ms) => {
-      const b = document.createElement('div');
-      b.className = 'm-bubble'; b.textContent = text; el.append(b);
-      return b.animate([{ opacity: 0 }, { opacity: 1, offset: .08 }, { opacity: 1, offset: .9 }, { opacity: 0 }], { duration: ms, easing: 'steps(1, end)', fill: 'forwards' }).finished;
+      el.className = 'chip' + (ink ? ' ' + ink : '');
+      el.style.setProperty('--c', c);
+      el.innerHTML = '<svg viewBox="0 0 20 22" aria-hidden="true"><path d="M2 2 L2 18.5 L6.6 14.2 L9.6 20.6 L12.6 19.2 L9.7 12.9 L16 12.9 Z" fill="' + c +
+        '" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg><span></span>';
+      el.lastChild.textContent = nextWord();
+      place(el, x, y);
+      layer.append(el);
+      active = el; lastX = x; lastY = y; lastSpawn = performance.now();
+      hero.classList.add('chipping');
     };
-    const pixelBurst = (x, y, n, cls, spread, ms, fall = 0) => Promise.all(Array.from({ length: n }, (_, i) => {
-      const p = document.createElement('div'); p.className = 'px ' + cls; stage.append(p);
-      p.style.left = snap(x) + 'px'; p.style.top = snap(y) + 'px';
-      return p.animate([{ transform: 'none', opacity: 1 }, { transform: `translate(${snap(rnd(-spread, spread))}px, ${snap(rnd(-spread, spread * .3) + fall)}px)`, opacity: 0 }],
-        { duration: ms, delay: i * 40, easing: 'steps(8, end)', fill: 'forwards' }).finished.then(() => p.remove());
-    }));
-
-    const acts = {
-      async assemble() {
-        const x = W * .55, y = H - 8;
-        const a = actor('', '', 'happy'); a.style.opacity = 0;
-        a.style.transform = T(x, y);
-        const ox = parseFloat(a.style.transform.match(/translate\(([-\d.]+)px/)[1]);
-        const oy = parseFloat(a.style.transform.match(/,\s*([-\d.]+)px/)[1]);
-        const px = CELLS.map(([cx, cy]) => {
-          const p = document.createElement('div'); p.className = 'px'; stage.append(p);
-          p.style.width = p.style.height = Math.ceil(6 * U) + 'px';
-          const tx = ox + (cx + OX) * U, ty = oy + (cy + OY) * U;
-          p.style.left = tx + 'px'; p.style.top = ty + 'px';
-          return { p, from: `translate(${snap(rnd(-W * .6, W * .5))}px, ${snap(rnd(-H, -40))}px) rotate(${Math.round(rnd(-2, 2)) * 90}deg)` };
-        });
-        await Promise.all(px.map(({ p, from }, i) => p.animate([{ transform: from, opacity: 0 }, { opacity: 1, offset: .2 }, { transform: 'none', opacity: 1 }],
-          { duration: 1600, delay: i * 14, easing: 'steps(10, end)', fill: 'forwards' }).finished));
-        a.style.opacity = 1; px.forEach(({ p }) => p.style.visibility = 'hidden');
-        a.classList.add('waving');
-        await Promise.all([bubble(a, 'Built pixel by pixel', 2600), wait(2600)]);
-        a.classList.remove('waving');
-        a.style.opacity = 0; px.forEach(({ p }) => p.style.visibility = 'visible');
-        await Promise.all(px.map(({ p }, i) => p.animate([{ transform: 'none', opacity: 1 }, { transform: `translate(${snap(rnd(-80, W * .6))}px, ${snap(rnd(-H, H * .2))}px)`, opacity: 0 }],
-          { duration: 1500, delay: (CELLS.length - i) * 10, easing: 'steps(10, end)', fill: 'forwards' }).finished));
-        px.forEach(({ p }) => p.remove()); a.remove();
-      },
-      async hat() {
-        const a = actor(PROPS.hat), y = H - 8, x0 = W + EW, x1 = W * .52;
-        a.classList.add('walking');
-        await go(a, [T(x0, y), T(x1, y)], 3000);
-        a.classList.remove('walking'); a.classList.add('waving', 'happy');
-        const hat = a.querySelector('.m-hat');
-        const tip = () => hat.animate([{ transform: 'none' }, { transform: 'translate(0,-14px)' }, { transform: 'none' }], { duration: 900, easing: 'steps(3, end)' }).finished;
-        await Promise.all([bubble(a, 'Hire this guy!', 2600), tip().then(tip)]);
-        a.classList.remove('waving', 'happy'); a.classList.add('walking');
-        await go(a, [T(x1, y), T(x0, y)], 2800);
-        a.remove();
-      },
-      async swim() {
-        const waves = document.createElement('div'); waves.className = 'waves'; stage.append(waves);
-        await waves.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, easing: 'steps(3, end)', fill: 'forwards' }).finished;
-        const a = actor(PROPS.goggles, '', 'swimming'); a.style.zIndex = 0; waves.style.zIndex = 1;
-        const y = H + S * .36, x0 = W + EW, x1 = W * .3;
-        const bob = [0, 1, 2, 3, 4, 5, 6, 7, 8].map(i => T(x0 + (x1 - x0) * i / 8, y + (i % 2 ? -8 : 4)));
-        await go(a, bob, 4800);
-        const sx = x1, sy = H - 50;
-        await Promise.all([go(a, [T(x1, y), T(x1 - 8, y - 28), T(x1 - 20, y + S * 1.2)], 1000), pixelBurst(sx, sy, 10, 'water', 50, 900, -20)]);
-        await waves.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 600, easing: 'steps(3, end)', fill: 'forwards' }).finished;
-        a.remove(); waves.remove();
-      },
-      async plane() {
-        const a = actor('', PROPS.plane, 'cool');
-        const P = (fx, fy) => T(W * fx, H * fy);
-        await go(a, [
-          { transform: T(W + EW, H * .2) },
-          { transform: P(.62, .55), offset: .3 },
-          { transform: P(.25, .5), offset: .55 },
-          { transform: P(.38, .2), offset: .75 },
-          { transform: T(W + EW, -EH * .2) }
-        ], 8200);
-        a.remove();
-      },
-      async horse() {
-        const a = actor(PROPS.horse, '', 'galloping');
-        const y = H - 22, x0 = W + EW, x1 = W * .2;
-        await go(a, [T(x0, y), T(x1, y)], 4200);
-        a.classList.remove('galloping'); a.classList.add('happy');
-        await go(a, [T(x1, y), T(x1, y - 16), T(x1, y)], 900);
-        a.classList.remove('happy'); a.classList.add('galloping');
-        await go(a, [T(x1, y), T(x0, y)], 3400);
-        a.remove();
-      },
-      async balloon() {
-        const a = actor(PROPS.balloon), x = W * .62;
-        await go(a, [T(x, H + EH), T(x, H * .62)], 3200);
-        a.classList.add('waving', 'happy');
-        await go(a, [T(x, H * .62), T(x + 12, H * .58), T(x - 12, H * .6), T(x, H * .58)], 2800);
-        a.classList.remove('waving', 'happy');
-        await go(a, [T(x, H * .58), T(x + 60, -EH * .3)], 3600);
-        a.remove();
-      },
-      async jetpack() {
-        const a = actor('', PROPS.jetpack, 'cool'), x = W * .45;
-        await go(a, [T(x, H + EH), T(x, H * .55)], 2400);
-        await go(a, [0, 1, 2, 3, 4, 5].map(i => T(x + (i % 2 ? 4 : -4), H * .55 + (i % 2 ? -4 : 4))), 2000);
-        await Promise.all([go(a, [T(x, H * .55), T(W * .8, -EH * .6)], 1700), pixelBurst(x - 6, H * .55 - 4, 12, 'smoke', 40, 1300, 60)]);
-        a.remove();
-      },
-      async skate() {
-        const a = actor(PROPS.board, '', 'cool'), y = H - 18, x0 = W + EW, x1 = W * .44;
-        await go(a, [T(x0, y), T(x1, y)], 2800);
-        await go(a, [T(x1, y), T(x1 - 28, y - 64), T(x1 - 56, y)], 900);
-        await pixelBurst(a.getBoundingClientRect().left - stage.getBoundingClientRect().left + EW / 2, y - 8, 6, 'smoke', 24, 500);
-        await go(a, [T(x1 - 56, y), T(W * .22, y)], 1300);
-        await go(a, [T(W * .22, y), T(x0, y)], 2600);
-        a.remove();
-      },
-      async chute() {
-        const a = actor(PROPS.chute), x = W * .55, y = H - 8;
-        await go(a, [
-          { transform: T(x - 40, -EH * .4) },
-          { transform: T(x + 30, H * .3), offset: .4 },
-          { transform: T(x - 16, H * .65), offset: .75 },
-          { transform: T(x, y) }
-        ], 4200);
-        await a.querySelector('.m-chute').animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(60px)' }], { duration: 600, easing: 'steps(4, end)', fill: 'forwards' }).finished;
-        a.classList.add('waving', 'happy');
-        await wait(1300);
-        a.classList.remove('waving', 'happy'); a.classList.add('walking');
-        await go(a, [T(x, y), T(W + EW, y)], 2600);
-        a.remove();
-      }
+    const goIdle = () => { retire(active, 0); active = null; hero.classList.remove('chipping'); };
+    const onMove = e => {
+      const r = hero.getBoundingClientRect();
+      px = e.clientX - r.left; py = e.clientY - r.top;
+      const now = performance.now();
+      if (!active || (Math.hypot(px - lastX, py - lastY) >= SPAWN_DIST && now - lastSpawn >= SPAWN_GAP)) spawn(px, py);
+      if (!raf) raf = requestAnimationFrame(() => { raf = 0; if (active) place(active, px, py); });
+      clearTimeout(idleT); idleT = setTimeout(goIdle, IDLE);
     };
-
-    // ---- movie-style acts: homages built from simple pixel shapes (no film artwork or logos) ----
-    const div = (cls, html = '', css = {}, parent = stage) => {
-      const d = document.createElement('div'); d.className = cls; d.innerHTML = html; Object.assign(d.style, css); parent.append(d); return d;
-    };
-    const pxsvg = (w, h, vb, inner) => `<svg viewBox="${vb}" width="${Math.round(w)}" height="${Math.round(h)}">${inner}</svg>`;
-    const mv = (node, frames, ms, opts = {}) =>
-      node.animate(frames.map(f => typeof f === 'string' ? { transform: f } : f), { duration: ms, easing: `steps(${Math.max(4, Math.round(ms / 85))}, end)`, fill: 'forwards', ...opts }).finished;
-    const fade = (node, a, b, ms) => node.animate([{ opacity: a }, { opacity: b }], { duration: ms, easing: 'steps(4, end)', fill: 'forwards' }).finished;
-    const at = (x, y) => `translate(${snap(x)}px, ${snap(y)}px)`;
-
-    const CAR = `${r(4, 16, 92, 12, '#b9bdc6')}${r(10, 12, 82, 4, '#c9ccd3')}${r(30, 4, 46, 8, '#b9bdc6')}${r(34, 6, 38, 6, '#1c1b19')}
-      ${r(46, 7, 9, 5, '#e2763f')}${r(46, 8, 9, 2, '#1c1b19')}${r(0, 20, 6, 8, '#8b8f99')}${r(90, 16, 8, 10, '#6b6f78')}${r(92, 18, 2, 6, '#ff7a1a')}
-      ${r(4, 22, 92, 2, '#6b6f78')}${r(14, 26, 14, 10, '#1c1b19')}${r(70, 26, 14, 10, '#1c1b19')}${r(19, 29, 4, 4, '#8b8f99')}${r(75, 29, 4, 4, '#8b8f99')}${r(30, 34, 38, 2, '#7fe7ff')}`;
-    const CAB = `${r(4, 0, 52, 100, '#3b2f8f')}${r(4, 0, 52, 12, '#ff3d7f')}${r(10, 3, 4, 6, '#fff')}${r(18, 3, 4, 6, '#fff')}${r(26, 3, 4, 6, '#fff')}${r(34, 3, 4, 6, '#fff')}${r(42, 3, 4, 6, '#fff')}
-      ${r(9, 15, 42, 34, '#111')}${r(12, 18, 36, 28, '#0b1a3a')}
-      <g class="scr-a">${r(16, 22, 6, 4, '#36d399')}${r(26, 22, 6, 4, '#36d399')}${r(36, 22, 6, 4, '#36d399')}${r(21, 29, 6, 4, '#36d399')}${r(31, 29, 6, 4, '#36d399')}${r(28, 40, 4, 4, '#ffd23f')}</g>
-      <g class="scr-b"><text class="m-scr" x="30" y="30" text-anchor="middle">HIGH</text><text class="m-scr" x="30" y="38" text-anchor="middle">SCORE</text></g>
-      ${r(0, 50, 60, 10, '#5a4bc0')}${r(15, 44, 4, 8, '#1c1b19')}${r(13, 40, 8, 6, '#e0483e')}${r(34, 52, 6, 4, '#ffd23f')}${r(44, 52, 6, 4, '#36d399')}
-      ${r(8, 62, 44, 36, '#2a2170')}${r(26, 72, 8, 10, '#ffd23f')}${r(29, 74, 2, 6, '#1c1b19')}`;
-    const fish = (c, c2) => `${r(4, 2, 12, 8, c)}${r(2, 4, 2, 4, c)}${r(16, 3, 4, 6, c2)}${r(9, 0, 4, 2, c2)}${r(5, 4, 2, 2, '#1c1b19')}${r(8, 8, 4, 2, c2)}`;
-    const moonRows = () => {
-      let out = '';
-      for (let y = 0; y < 20; y++) { const hw = Math.round(Math.sqrt(Math.max(0, 100 - (y - 9.5) ** 2))); out += r(10 - hw, y, hw * 2, 1, '#f1ead3'); }
-      return out + r(5, 6, 3, 2, '#e4dbbd') + r(12, 11, 4, 3, '#e4dbbd') + r(7, 14, 2, 2, '#e4dbbd');
-    };
-    const BIKE = `${r(-4, 86, 24, 4, '#1c1b19')}${r(-4, 108, 24, 4, '#1c1b19')}${r(-8, 90, 4, 18, '#1c1b19')}${r(20, 90, 4, 18, '#1c1b19')}
-      ${r(80, 86, 24, 4, '#1c1b19')}${r(80, 108, 24, 4, '#1c1b19')}${r(76, 90, 4, 18, '#1c1b19')}${r(104, 90, 4, 18, '#1c1b19')}
-      ${r(8, 96, 84, 4, '#1c1b19')}${r(46, 80, 6, 16, '#1c1b19')}${r(88, 62, 4, 34, '#1c1b19')}${r(84, 60, 14, 4, '#1c1b19')}${r(96, 64, 18, 12, '#1c1b19')}${r(100, 56, 10, 8, '#1c1b19')}`;
-    const SHIP = `${r(20, 30, 100, 30, '#1c1b19')}${r(10, 30, 10, 22, '#1c1b19')}${r(4, 30, 6, 14, '#1c1b19')}${r(0, 30, 4, 6, '#1c1b19')}
-      ${r(14, 52, 106, 8, '#b8432f')}${r(4, 30, 116, 3, '#f4f4f4')}${r(4, 22, 116, 2, '#e8e8e8')}${r(4, 28, 116, 2, '#d6d0c4')}
-      ${Array.from({ length: 12 }, (_, i) => r(6 + i * 10, 22, 2, 8, '#e8e8e8')).join('')}${r(60, 6, 14, 16, '#e9e4d8')}${r(62, 0, 10, 6, '#e0483e')}${r(90, 10, 14, 12, '#e9e4d8')}${r(92, 4, 10, 6, '#e0483e')}`;
-
-    Object.assign(acts, {
-      async protest() {
-        const signs = ['HIRE GAL', 'SHIP IT', 'MORE UX', 'NO BUGS', 'PIXELS!'], moods = ['happy', 'cool', '', 'happy', 'cool'];
-        const sc = .7, y = H - 8, gap = Math.min(88, W * .86 / 5);
-        const xs = signs.map((_, i) => W * .08 + gap * i + gap / 2);
-        const crowd = signs.map((t, i) => actor(`<g>${r(47, -34, 6, 66, '#8a5a34')}${r(8, -64, 84, 34, '#1c1b19')}${r(11, -61, 78, 28, '#fff')}<text class="m-sign" x="50" y="-42" text-anchor="middle">${t}</text></g>`, '', 'walking ' + moods[i], sc));
-        await Promise.all(crowd.map((a, i) => mv(a, [T(xs[i] + W, y, '', sc), T(xs[i], y, '', sc)], 3000)));
-        crowd.forEach(a => a.classList.remove('walking'));
-        const chant = bubble(crowd[4], 'Hire Gal! Hire Gal!', 2400);
-        for (let k = 0; k < 3; k++) await Promise.all(crowd.map((a, i) => mv(a, [T(xs[i], y, '', sc), T(xs[i], y - 18, '', sc), T(xs[i], y, '', sc)], 600, { delay: i * 60 })));
-        await chant;
-        crowd.forEach(a => a.classList.add('walking'));
-        await Promise.all(crowd.map((a, i) => mv(a, [T(xs[i], y, '', sc), T(xs[i] + W, y, '', sc)], 2600)));
-        crowd.forEach(a => a.remove());
-      },
-      async timecar() {
-        const y = H - 6, cw = Math.min(300, W * .78), ch = cw * .36, cx = W * .14;
-        const car = div('prop', pxsvg(cw, ch, '0 0 100 36', CAR)); car.style.transform = at(W + 40, y - ch);
-        const flash = div('flash');
-        const rear = cx + cw * .8;
-        const trails = [y - ch * .3, y - 6].map(ty => div('trail', '', { top: snap(ty) + 'px', left: snap(rear) + 'px' }));
-        await fade(flash, 0, .85, 120); fade(flash, .85, 0, 500);
-        await Promise.all([mv(car, [at(W + 40, y - ch), at(cx, y - ch)], 700),
-          ...trails.map(t => t.animate([{ width: '0px' }, { width: snap(W - rear) + 'px' }], { duration: 700, easing: 'steps(8, end)', fill: 'forwards' }).finished)]);
-        await bubble(car, '88 MPH!', 2000);
-        const a = actor('', '', 'cool'), fx = cx + cw * .5;
-        await mv(a, [T(fx, y - ch * .4), T(fx + cw * .25, y - 40), T(fx + cw * .45, y)], 700);
-        a.classList.replace('cool', 'happy'); a.classList.add('waving');
-        await bubble(a, 'Great Scott!', 1800);
-        a.classList.remove('waving');
-        await mv(a, [T(fx + cw * .45, y), T(fx + cw * .25, y - 40), T(fx, y - ch * .4)], 600);
-        a.remove();
-        await fade(flash, 0, .85, 120); fade(flash, .85, 0, 500);
-        car.style.opacity = 0;
-        await Promise.all([pixelBurst(cx + cw * .5, y - ch * .5, 14, 'smoke', 60, 900), ...trails.map(t => fade(t, 1, 0, 1400))]);
-        car.remove(); flash.remove(); trails.forEach(t => t.remove());
-      },
-      async arcade() {
-        const y = H - 6, chh = Math.min(H * .85, 210), cw = chh * .6, cx = W * .6;
-        const cab = div('prop', pxsvg(cw, chh, '0 0 60 100', CAB)); cab.style.transform = at(W + 20, y - chh);
-        await mv(cab, [at(W + 20, y - chh), at(cx, y - chh)], 1200);
-        const a = actor('', '', 'walking'), px = cx - 30;
-        await mv(a, [T(W + EW, y), T(cx + cw * .5, y), T(px, y)], 2000);
-        a.classList.remove('walking'); a.classList.add('playing');
-        await wait(2600);
-        cab.classList.add('win'); a.classList.remove('playing'); a.classList.add('happy');
-        await Promise.all([bubble(a, 'HIGH SCORE!', 1800), (async () => { for (let k = 0; k < 2; k++) await mv(a, [T(px, y), T(px, y - 24), T(px, y)], 600); })()]);
-        a.classList.remove('happy'); a.classList.add('walking');
-        await Promise.all([mv(a, [T(px, y), T(W + EW, y)], 1800), mv(cab, [at(cx, y - chh), at(W + 20, y - chh)], 1600, { delay: 300 })]);
-        a.remove(); cab.remove();
-      },
-      async dive() {
-        const sea = div('sea');
-        await fade(sea, 0, 1, 500);
-        const fishes = [['#ffb02e', '#ff7a1a'], ['#ff6fa8', '#e0483e'], ['#36d399', '#1f9d6c'], ['#ffd23f', '#e2a73a']].map(([c, c2], i) => {
-          const f = div('prop', pxsvg(40 - i * 4, 24 - i * 2, '0 0 20 12', fish(c, c2)));
-          const fy = H * (.2 + i * .18);
-          f.animate([{ transform: at(W + 20, fy) }, { transform: at(-60, fy + (i % 2 ? 16 : -16)) }], { duration: 5200 + i * 700, delay: i * 500, easing: 'steps(46, end)', fill: 'both' });
-          return f;
-        });
-        const a = actor(PROPS.goggles, '', 'swimming');
-        await mv(a, [T(W * .62, -10), T(W * .5, H * .62)], 1800);
-        const bubbles = pixelBurst(W * .5, H * .4, 8, 'water', 30, 1800, -120);
-        await mv(a, [0, 1, 2, 3, 4, 5].map(i => T(W * (.5 - i * .04), H * .62 + (i % 2 ? -8 : 6))), 2600);
-        a.classList.add('happy');
-        await wait(600);
-        await mv(a, [T(W * .3, H * .62), T(W * .42, -EH * .2)], 1700);
-        await bubbles;
-        await fade(sea, 1, 0, 500);
-        a.remove(); sea.remove(); fishes.forEach(f => f.remove());
-      },
-      async moonride() {
-        const m = Math.min(H * .62, W * .46);
-        const moon = div('prop', pxsvg(m, m, '0 0 20 20', moonRows()));
-        moon.style.transform = at(W * .52 - m / 2, H * .46 - m / 2);
-        await fade(moon, 0, 1, 900);
-        const a = actor(BIKE, '', 'silhouette');
-        await mv(a, [
-          { transform: T(W + EW, H * .95) },
-          { transform: T(W * .55, H * .52), offset: .5 },
-          { transform: T(W * .1, -EH * .2) }
-        ], 6400);
-        a.remove();
-        await fade(moon, 1, 0, 900);
-        moon.remove();
-      },
-      async bullettime() {
-        const rain = div('rain'), cols = 14;
-        for (let i = 0; i < cols; i++) {
-          const c = div('rcol', Array.from({ length: 26 }, () => '01ABCDEFGHXYZ'[Math.floor(Math.random() * 13)]).join('\n'), { left: (i / cols * 100) + '%' }, rain);
-          c.animate([{ transform: 'translateY(-110%)' }, { transform: `translateY(${H + 40}px)` }], { duration: rnd(1800, 3200), delay: rnd(0, 1200), iterations: Infinity, easing: 'steps(24, end)' });
-        }
-        await fade(rain, 0, 1, 600);
-        const a = actor('', '', 'cool walking'), x = W * .5, y = H - 8;
-        await mv(a, [T(W + EW, y), T(x, y)], 2000);
-        a.classList.remove('walking');
-        await mv(a, [T(x, y), T(x, y, 'rotate(-52deg)')], 700);
-        const bullets = [0, 1, 2].map(i => {
-          const b = div('bullet', '', { top: snap(y - S * (.55 + i * .1)) + 'px', left: '0px' });
-          return b.animate([{ transform: at(W + 30, 0) }, { transform: at(-40, 0) }], { duration: 1500, delay: i * 220, easing: 'steps(18, end)', fill: 'both' }).finished.then(() => b.remove());
-        });
-        await Promise.all(bullets);
-        await mv(a, [T(x, y, 'rotate(-52deg)'), T(x, y)], 700);
-        await bubble(a, 'Whoa.', 1300);
-        a.classList.add('walking');
-        await Promise.all([mv(a, [T(x, y), T(W + EW, y)], 1800), fade(rain, 1, 0, 1400)]);
-        a.remove(); rain.remove();
-      },
-      async bow() {
-        const waves = div('waves');
-        await fade(waves, 0, 1, 400);
-        const sw = Math.min(W * 1.05, 440), sh = sw / 2, deck = H * .72;
-        const ship = div('prop', pxsvg(sw, sh, '0 0 120 60', SHIP));
-        ship.style.transform = at(W + 20, deck - sh * 28 / 60);
-        waves.style.zIndex = 2;
-        const a = actor('', '', 'happy'); ship.append(a);
-        a.style.transform = T(sw * 14 / 120, sh * 30 / 60);
-        await mv(ship, [at(W + 20, deck - sh * 28 / 60), at(W * .04, deck - sh * 28 / 60)], 3000);
-        a.classList.add('flying');
-        const winds = [0, 1, 2, 3, 4].map(i => {
-          const w = div('wind', '', { top: snap(deck - S * (.3 + i * .18)) + 'px', left: '0px' });
-          return w.animate([{ transform: at(-60, 0) }, { transform: at(W + 60, 0) }], { duration: 700, delay: i * 180, iterations: 3, easing: 'steps(10, end)', fill: 'both' }).finished.then(() => w.remove());
-        });
-        await Promise.all([bubble(a, "I'm flying!", 2400), ...winds]);
-        a.classList.remove('flying');
-        await mv(ship, [at(W * .04, deck - sh * 28 / 60), at(W + 20, deck - sh * 28 / 60)], 2600);
-        await fade(waves, 1, 0, 400);
-        ship.remove(); waves.remove();
-      }
-    });
-
-    // ---- five more homages, kept minimal: a few pixel shapes per scene ----
-    const UMBRELLA = `${r(46, -10, 4, 56, '#1c1b19')}${r(46, 44, 10, 4, '#1c1b19')}${r(52, 40, 4, 6, '#1c1b19')}
-      ${r(18, -26, 60, 6, '#e0483e')}${r(10, -20, 76, 6, '#e0483e')}${r(4, -14, 88, 6, '#e0483e')}${r(30, -32, 36, 6, '#e0483e')}${r(46, -38, 4, 6, '#1c1b19')}`;
-    const FLOPPY = `${r(0, 0, 20, 20, '#2f4fd6')}${r(4, 0, 12, 7, '#d6d8de')}${r(11, 1, 3, 5, '#2f4fd6')}${r(3, 10, 14, 9, '#fff')}<text class="m-scr" x="10" y="17" text-anchor="middle" style="fill:#1c1b19">CV</text>`;
-    const boulderRows = () => {
-      let out = '';
-      for (let y = 0; y < 16; y++) { const hw = Math.round(Math.sqrt(Math.max(0, 64 - (y - 7.5) ** 2))); out += r(8 - hw, y, hw * 2, 1, '#9a948a'); }
-      return out + r(4, 4, 3, 2, '#b9b3a8') + r(9, 9, 3, 3, '#7d776d') + r(5, 11, 2, 2, '#7d776d') + r(10, 3, 2, 2, '#b9b3a8');
-    };
-
-    Object.assign(acts, {
-      async stairs() {
-        const steps = 5, sw = Math.min(46, W * .08), sh = 18, baseX = W * .18, y = H - 6;
-        const blocks = Array.from({ length: steps }, (_, i) => div('step', '', {
-          left: snap(baseX + (steps - 1 - i) * sw) + 'px', top: snap(y - (i + 1) * sh) + 'px', width: snap(sw) + 'px', height: snap((i + 1) * sh) + 'px'
-        }));
-        await Promise.all(blocks.map(b => fade(b, 0, 1, 400)));
-        const a = actor('', '', 'walking');
-        const stepX = i => baseX + (steps - 1 - i) * sw + sw / 2;
-        await mv(a, [T(W + EW, y), T(stepX(0) + sw, y)], 1600);
-        const climb = [T(stepX(0) + sw, y)];
-        for (let i = 0; i < steps; i++) climb.push(T(stepX(i), y - (i + 1) * sh));
-        await mv(a, climb, 1800);
-        a.classList.remove('walking'); a.classList.add('flying', 'happy');
-        const top = y - steps * sh, tx = stepX(steps - 1);
-        for (let k = 0; k < 3; k++) await mv(a, [T(tx, top), T(tx, top - 22), T(tx, top)], 520);
-        a.classList.remove('flying', 'happy'); a.classList.add('walking');
-        const down = [];
-        for (let i = steps - 1; i >= 0; i--) down.push(T(stepX(i), y - (i + 1) * sh));
-        await mv(a, [...down, T(stepX(0) + sw, y), T(W + EW, y)], 2600);
-        await Promise.all(blocks.map(b => fade(b, 1, 0, 300)));
-        a.remove(); blocks.forEach(b => b.remove());
-      },
-      async raindance() {
-        const rain = div('drizzle');
-        await fade(rain, 0, 1, 500);
-        const a = actor(UMBRELLA, '', 'walking'), x = W * .5, y = H - 8;
-        await mv(a, [T(W + EW, y), T(x, y)], 2600);
-        a.classList.remove('walking'); a.classList.add('happy');
-        const notes = pixelBurst(x + 20, y - S * 1.1, 6, 'note', 40, 2200, -90);
-        for (let k = 0; k < 2; k++) await mv(a, [T(x, y), T(x - 16, y - 26), T(x - 32, y), T(x - 16, y - 26), T(x, y)], 1000);
-        await notes;
-        a.classList.remove('happy'); a.classList.add('walking');
-        await Promise.all([mv(a, [T(x, y), T(W + EW, y)], 2400), fade(rain, 1, 0, 2000)]);
-        a.remove(); rain.remove();
-      },
-      async boulder() {
-        const y = H - 6, bs = Math.min(110, H * .4);
-        const a = actor('', '', 'walking'), x = W * .62;
-        await mv(a, [T(W + EW, y), T(x, y)], 2600);
-        a.classList.remove('walking');
-        await mv(a, [T(x, y), T(x + 4, y), T(x - 4, y), T(x + 4, y), T(x - 4, y), T(x, y)], 1000);
-        const rock = div('prop', pxsvg(bs, bs, '0 0 16 16', boulderRows()));
-        rock.style.transform = at(W + 20, y - bs);
-        rock.firstElementChild.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-720deg)' }], { duration: 4200, easing: 'steps(16, end)' });
-        a.classList.add('walking', 'cool');
-        await Promise.all([
-          mv(a, [T(x, y), T(x - W * .3, y - 10), T(-EW, y)], 3200),
-          mv(rock, [at(W + 20, y - bs), at(x - bs * .2, y - bs), at(-bs * 2, y - bs)], 4200, { delay: 300 })
-        ]);
-        a.remove(); rock.remove();
-      },
-      async ropedrop() {
-        const x = W * .58, y = H - 8, hang = y - S * .45;
-        const disk = div('prop', pxsvg(34, 34, '0 0 20 20', FLOPPY));
-        disk.style.transform = at(x - 17, y - 34);
-        await fade(disk, 0, 1, 400);
-        const a = actor(`${r(48, -900, 4, 932, '#1c1b19')}`, '', 'flying');
-        await mv(a, [T(x, -EH * .2), T(x, hang)], 3200);
-        a.classList.remove('flying'); a.classList.add('happy');
-        await mv(a, [T(x, hang), T(x, hang + 14), T(x, hang)], 700);
-        await mv(disk, [at(x - 17, y - 34), at(x - 17, hang - S * .55)], 500);
-        a.classList.remove('happy'); a.classList.add('cool');
-        await bubble(a, 'Got the CV.', 2400);
-        await Promise.all([mv(a, [T(x, hang), T(x, -EH * .4)], 900), mv(disk, [at(x - 17, hang - S * .55), at(x - 17, -EH * .4 - S * .55)], 900)]);
-        a.remove(); disk.remove();
-      },
-      async disco() {
-        const y = H - 8, x = W * .55, tiles = 6, tw = Math.min(40, W * .07);
-        const floor = Array.from({ length: tiles }, (_, i) => div('tile', '', {
-          left: snap(x - tiles * tw / 2 + i * tw) + 'px', top: snap(y) + 'px', width: snap(tw - 2) + 'px', animationDelay: (i * .17) + 's'
-        }));
-        const ball = div('prop', pxsvg(26, 26, '0 0 10 10', `${r(3, 0, 4, 10, '#c9ccd4')}${r(0, 3, 10, 4, '#c9ccd4')}${r(1, 1, 8, 8, '#c9ccd4')}${r(2, 2, 2, 2, '#fff')}${r(6, 5, 2, 2, '#fff')}${r(4, 7, 2, 1, '#fff')}`));
-        const line = div('wire');
-        ball.style.transform = at(x - 13, -30); line.style.left = snap(x - 1) + 'px';
-        await Promise.all([...floor.map(f => fade(f, 0, 1, 400)), mv(ball, [at(x - 13, -30), at(x - 13, H * .12)], 900), line.animate([{ height: '0px' }, { height: snap(H * .12) + 'px' }], { duration: 900, easing: 'steps(10, end)', fill: 'forwards' }).finished]);
-        const a = actor('', '', 'walking');
-        await mv(a, [T(W + EW, y), T(x, y)], 1800);
-        a.classList.remove('walking'); a.classList.add('cool', 'disco');
-        await mv(a, [0, 1, 2, 3, 4, 5, 6, 7].map(i => T(x + (i % 2 ? 12 : -12), y)), 3200);
-        a.classList.remove('disco'); a.classList.add('walking');
-        await mv(a, [T(x, y), T(W + EW, y)], 1800);
-        await Promise.all([...floor.map(f => fade(f, 1, 0, 300)), mv(ball, [at(x - 13, H * .12), at(x - 13, -40)], 500), fade(line, 1, 0, 400)]);
-        a.remove(); ball.remove(); line.remove(); floor.forEach(f => f.remove());
-      }
-    });
-
-    let bag = [], last = '';
-    const forced = new URLSearchParams(location.search).get('mascot');
-    if (forced) window.__mascot = { acts, measure: () => (measure(), { W, H, roomy }) };   // preview/test hook, only with ?mascot=
-    const next = () => {
-      if (forced && acts[forced]) return forced;
-      if (!bag.length) { bag = Object.keys(acts).sort(() => Math.random() - .5); if (bag[0] === last && bag.length > 1) bag.push(bag.shift()); }
-      return (last = bag.shift());
-    };
-    let heroOn = true;
-    new IntersectionObserver(([en]) => { heroOn = en.isIntersecting; }).observe(heroSec);
-    const ready = () => heroOn && !document.hidden && !home.hidden;
-
-    (async function run() {
-      await wait(1600);
-      for (;;) {
-        while (!ready()) await wait(800);
-        measure();
-        if (!roomy) { await wait(1500); continue; }
-        try { await acts[next()](); } catch (e) { stage.replaceChildren(); }
-        await wait(rnd(2000, 3000));
-      }
-    })();
-    addEventListener('resize', measure);
+    hero.addEventListener('pointermove', onMove, { passive: true });
+    hero.addEventListener('pointerdown', onMove, { passive: true });
+    hero.addEventListener('pointerleave', () => { clearTimeout(idleT); goIdle(); });
+    addEventListener('hashchange', () => { clearTimeout(idleT); goIdle(); });
   })();
-
-  /* ---------- hero: dot grid with a gaze spot (a nod to eye-tracking heatmaps) ---------- */
-  const cv = document.getElementById('gaze');
-  const ctx = cv.getContext('2d');
-  const hero = cv.parentElement;
-  let W = 0, H = 0, dpr = 1, colors = {}, gx = 0, gy = 0, mx = null, my = null, t0 = performance.now();
-  function readColors() {
-    const s = getComputedStyle(root);
-    colors = { dot: s.getPropertyValue('--ink-3').trim(), acc: s.getPropertyValue('--accent').trim() };
-    if (reduce) draw();
-  }
-  function size() {
-    dpr = Math.min(devicePixelRatio || 1, 2);
-    W = hero.clientWidth; H = hero.clientHeight;
-    cv.width = W * dpr; cv.height = H * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    if (!gx) { gx = W * .72; gy = H * .45; }
-  }
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    const step = 22, R = 170;
-    for (let y = step / 2; y < H; y += step) {
-      for (let x = step / 2; x < W; x += step) {
-        const d = Math.hypot(x - gx, y - gy);
-        const k = Math.max(0, 1 - d / R);
-        const e = k * k;
-        ctx.globalAlpha = .22 + e * .7;
-        ctx.fillStyle = e > .08 ? colors.acc : colors.dot;
-        ctx.beginPath(); ctx.arc(x, y, .9 + e * 2.4, 0, 6.283); ctx.fill();
-      }
-    }
-    ctx.globalAlpha = 1;
-  }
-  function frame(now) {
-    if (mx === null) {
-      const t = (now - t0) / 1000;
-      const ax = W * (.7 + .16 * Math.sin(t * .35)), ay = H * (.45 + .25 * Math.sin(t * .52 + 1));
-      gx += (ax - gx) * .04; gy += (ay - gy) * .04;
-    } else { gx += (mx - gx) * .12; gy += (my - gy) * .12; }
-    draw();
-    if (!home.hidden && heroVisible) requestAnimationFrame(frame); else running = false;
-  }
-  let heroVisible = true, running = false;
-  const start = () => { if (!running && !reduce) { running = true; requestAnimationFrame(frame); } };
-  new IntersectionObserver(([en]) => { heroVisible = en.isIntersecting; if (heroVisible) start(); }).observe(hero);
-  hero.addEventListener('pointermove', e => { const r = hero.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; });
-  hero.addEventListener('pointerleave', () => { mx = my = null; });
-  addEventListener('resize', () => { size(); draw(); });
-  addEventListener('hashchange', () => { if (!home.hidden) start(); });
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', readColors);
-  size(); readColors(); draw(); start();
 })();
 </script>
 </body>

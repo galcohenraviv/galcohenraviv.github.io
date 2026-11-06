@@ -147,24 +147,30 @@ p { margin: 0; text-wrap: pretty; }
 }
 @keyframes caret { 50% { opacity: 0; } }
 .chips { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+/* Figma-style cursor chip (hero + hover labels): a coloured arrow plus a pill. Colour, width and text morph
+   between states ("smart animate"); --c is the multiplayer colour. */
 .chip { position: absolute; left: 0; top: 0; will-change: transform; }
 .chip svg { position: absolute; left: -2px; top: -2px; width: 20px; height: 22px; overflow: visible;
   filter: drop-shadow(0 1px 1.5px rgba(0,0,0,.25)); }
-.chip span {
-  position: absolute; left: 15px; top: 17px; white-space: nowrap; display: block;
-  font: 500 .875rem/1 var(--f-sans, inherit); letter-spacing: -0.005em; padding: 7px 11px 8px;
-  border-radius: 3px 12px 12px 12px; color: #fff; background: var(--c);
+.chip svg path { fill: var(--c); transition: fill .42s cubic-bezier(.2,.9,.25,1); }
+.chip .lbl {
+  position: absolute; left: 15px; top: 17px; display: block; overflow: hidden; white-space: nowrap;
+  font: 500 .875rem/1 var(--f-sans); letter-spacing: -0.005em; padding: 7px 11px 8px;
+  border-radius: 3px 12px 12px 12px; color: #fff; background: var(--c); transform-origin: 0 0;
   box-shadow: 0 1px 2px rgba(0,0,0,.12), 0 6px 16px -6px color-mix(in oklab, var(--c) 70%, transparent);
-  transform-origin: 0 0; animation: chip-in .38s cubic-bezier(.34,1.56,.64,1) both;
+  transition: background-color .42s cubic-bezier(.2,.9,.25,1), color .42s, box-shadow .42s;
 }
-.chip.dark-ink span { color: #1c1b19; }
-.chip.out { animation: chip-out .6s ease forwards; }
-@keyframes chip-in { from { opacity: 0; transform: scale(.55); } }
+.chip .txt { display: inline-block; }
+.chip .txt.leaving { position: absolute; left: 11px; top: 7px; }
+.chip.dark-ink .lbl { color: #1c1b19; }
+.chip.out > * { animation: chip-out .55s ease forwards; transform-origin: 0 0; }
 @keyframes chip-out { to { opacity: 0; filter: blur(3px); transform: scale(.92); } }
+.cursor-chip { position: fixed; z-index: 50; pointer-events: none; opacity: 0; transform: translate3d(-200px, -200px, 0); transition: opacity .18s; }
+.cursor-chip.on { opacity: 1; }
+.chip-cursor [data-cursor], .chip-cursor [data-cursor] * { cursor: none; }
 @media (prefers-reduced-motion: reduce) {
   .cc-title .caret { animation: none; }
-  .chip span { animation: none; }
-  .chip.out { animation: chip-fade .4s ease forwards; }
+  .chip.out > * { animation: chip-fade .4s ease forwards; }
   @keyframes chip-fade { to { opacity: 0; } }
 }
 
@@ -540,15 +546,6 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
 .lb-ctrl button:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.35); }
 .lb-ctrl button[disabled] { opacity: .3; cursor: default; }
 
-/* cursor label (fine pointers only) */
-.cursor {
-  position: fixed; left: 0; top: 0; z-index: 50; pointer-events: none;
-  font-family: var(--f-mono); font-size: .75rem; white-space: nowrap;
-  background: var(--ink); color: var(--paper); padding: 7px 12px; border-radius: 999px;
-  opacity: 0; transform: translate3d(-100px, -100px, 0) scale(.6); transition: opacity .25s, scale .25s;
-}
-.cursor.on { opacity: 1; }
-.cursor .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-right: 7px; vertical-align: 1px; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -1055,7 +1052,7 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
   </div>
 </div>
 
-<div class="cursor" id="cursor" aria-hidden="true"><span class="dot"></span><span id="cursorText"></span></div>
+<div class="chip cursor-chip" id="cursor" aria-hidden="true"></div>
 
 <script>
 (() => {
@@ -1081,7 +1078,31 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
   const bar = document.getElementById('bar');
   addEventListener('scroll', () => bar.classList.toggle('scrolled', scrollY > 8), { passive: true });
 
-  const cursor = document.getElementById('cursor');
+  /* ---------- Figma-style cursor chip, shared by the hero and the hover labels ---------- */
+  const CHIP_COLORS = [['#9747FF'], ['#0C8CE9'], ['#0E9F98'], ['#F2545B'], ['#FFB224', 1], ['#14AE5C']];   // Figma multiplayer palette; amber takes dark ink
+  const SMART = 'cubic-bezier(.2,.9,.25,1)';
+  const fillChip = el => { el.innerHTML = '<svg viewBox="0 0 20 22" aria-hidden="true"><path d="M2 2 L2 18.5 L6.6 14.2 L9.6 20.6 L12.6 19.2 L9.7 12.9 L16 12.9 Z" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg><span class="lbl"><span class="txt"></span></span>'; return el; };
+  const paintChip = (el, i) => { const [c, dark] = CHIP_COLORS[i % CHIP_COLORS.length]; el.style.setProperty('--c', c); el.classList.toggle('dark-ink', !!dark); };
+  const setChipText = (el, text) => { const t = document.createElement('span'); t.className = 'txt'; t.textContent = text; el.querySelector('.lbl').replaceChildren(t); };
+  const popChip = el => { if (!reduce) el.querySelector('.lbl').animate([{ opacity: 0, transform: 'scale(.55)' }, { opacity: 1, transform: 'none' }], { duration: 380, easing: 'cubic-bezier(.34,1.56,.64,1)' }); };
+  // smart animate: the pill eases to the new width while the old words slide up and out and the new ones slide in
+  const morphChip = (el, text) => {
+    const lbl = el.querySelector('.lbl'), cur = lbl.querySelector('.txt:not(.leaving)');
+    if (cur && cur.textContent === text) return;
+    if (reduce || !cur || !cur.textContent) return setChipText(el, text);
+    lbl.querySelectorAll('.leaving').forEach(n => n.remove());
+    const w0 = lbl.offsetWidth;
+    cur.classList.add('leaving');
+    const nu = document.createElement('span'); nu.className = 'txt'; nu.textContent = text;
+    lbl.append(nu);
+    lbl.animate([{ width: w0 + 'px' }, { width: lbl.offsetWidth + 'px' }], { duration: 420, easing: SMART });
+    cur.animate([{ opacity: 1, transform: 'none', filter: 'blur(0)' }, { opacity: 0, transform: 'translateY(-110%)', filter: 'blur(2px)' }],
+      { duration: 260, easing: 'cubic-bezier(.4,0,.6,1)', fill: 'forwards' }).onfinish = () => cur.remove();
+    nu.animate([{ opacity: 0, transform: 'translateY(110%)', filter: 'blur(2px)' }, { opacity: 1, transform: 'none', filter: 'blur(0)' }],
+      { duration: 420, easing: SMART });
+  };
+
+  const cursor = fillChip(document.getElementById('cursor'));
   let active = null;
   function hideCursor() { active = null; cursor.classList.remove('on'); }
 
@@ -1271,23 +1292,24 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
   addEventListener('hashchange', () => { if (!lb.hidden) closeLb(); });
 
   /* ---------- cursor label, tilt, magnetic buttons (fine pointers only) ---------- */
-  const cursorText = document.getElementById('cursorText');
-  let cx = -100, cy = -100, tx = -100, ty = -100, raf = 0;
+  let tx = -200, ty = -200, raf = 0, hoverColor = Math.floor(Math.random() * CHIP_COLORS.length), hiddenAt = 0;
   if (fine && !reduce) {
-    const loop = () => {
-      cx += (tx - cx) * 0.2; cy += (ty - cy) * 0.2;
-      cursor.style.transform = `translate3d(${cx + 16}px, ${cy + 14}px, 0) scale(${active ? 1 : .6})`;
-      raf = (Math.abs(tx - cx) > .1 || Math.abs(ty - cy) > .1) ? requestAnimationFrame(loop) : 0;
-    };
+    root.classList.add('chip-cursor');                // the chip's arrow stands in for the system cursor over labelled targets
+    const place = () => { raf = 0; cursor.style.transform = `translate3d(${tx}px, ${ty}px, 0)`; };
     addEventListener('pointermove', e => {
       tx = e.clientX; ty = e.clientY;
       const el = e.target.closest('[data-cursor]');
       if (el !== active) {
         active = el;
-        if (el) { cursorText.textContent = el.dataset.cursor; cursor.classList.add('on'); }
-        else cursor.classList.remove('on');
+        if (el) {
+          paintChip(cursor, ++hoverColor);
+          // moving straight from one target to the next morphs the chip; arriving fresh pops it in
+          if (performance.now() - hiddenAt < 300 && cursor.querySelector('.txt').textContent) morphChip(cursor, el.dataset.cursor);
+          else { setChipText(cursor, el.dataset.cursor); popChip(cursor); }
+          cursor.classList.add('on');
+        } else { cursor.classList.remove('on'); hiddenAt = performance.now(); }
       }
-      if (!raf) raf = requestAnimationFrame(loop);
+      if (!raf) raf = requestAnimationFrame(place);
     }, { passive: true });
     document.addEventListener('pointerleave', hideCursor);
 
@@ -1442,49 +1464,40 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
     });
   }
 
-  /* ---------- hero: Figma-style multiplayer cursor chips ---------- */
+  /* ---------- hero: Figma-style multiplayer cursor chip that smart-animates between keywords ---------- */
   (() => {
     const hero = document.getElementById('top'), layer = document.getElementById('chips');
     if (!hero || !layer) return;
     const WORDS = ['Product Design', 'Design Systems', 'AI-First UI', 'Claude Code', 'Figma', 'Fintech', 'Crypto',
       'Cybersecurity', 'Banking', 'Payments', 'B2B SaaS', 'B2C Apps', 'Front-end', 'Prototyping', 'Web3', 'Micro-interactions'];
-    // Figma multiplayer palette; amber takes dark ink for contrast
-    const COLORS = [['#9747FF'], ['#0C8CE9'], ['#0E9F98'], ['#F2545B'], ['#FFB224', 'dark-ink'], ['#14AE5C']];
     const SPAWN_DIST = 40, SPAWN_GAP = 1000, IDLE = 2000;
-    let bag = [], lastWord = '', colorAt = Math.floor(Math.random() * COLORS.length);
+    let bag = [], lastWord = '', colorAt = Math.floor(Math.random() * CHIP_COLORS.length);
     const nextWord = () => {
       if (!bag.length) { bag = WORDS.slice().sort(() => Math.random() - .5); if (bag[0] === lastWord) bag.push(bag.shift()); }
       return (lastWord = bag.shift());
     };
-    let active = null, idleT = 0, lastX = 0, lastY = 0, lastSpawn = -Infinity, px = 0, py = 0, raf = 0;
-    const place = (el, x, y) => { el.style.transform = `translate3d(${x}px, ${y}px, 0)`; };
-    const retire = (el, delay) => {
-      if (!el || el.dataset.out) return;
-      el.dataset.out = '1';
-      setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 650); }, delay);
-    };
-    const spawn = (x, y) => {
-      layer.replaceChildren();                          // one cursor and chip at a time: the old ones vanish instantly
-      colorAt = (colorAt + 1) % COLORS.length;          // always a different colour from the last chip
-      const [c, ink] = COLORS[colorAt];
-      const el = document.createElement('div');
-      el.className = 'chip' + (ink ? ' ' + ink : '');
-      el.style.setProperty('--c', c);
-      el.innerHTML = '<svg viewBox="0 0 20 22" aria-hidden="true"><path d="M2 2 L2 18.5 L6.6 14.2 L9.6 20.6 L12.6 19.2 L9.7 12.9 L16 12.9 Z" fill="' + c +
-        '" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg><span></span>';
-      el.lastChild.textContent = nextWord();
-      place(el, x, y);
-      layer.append(el);
-      active = el; lastX = x; lastY = y; lastSpawn = performance.now();
+    let chip = null, idleT = 0, lastX = 0, lastY = 0, lastSpawn = -Infinity, px = 0, py = 0, raf = 0;
+    const place = () => { raf = 0; if (chip) chip.style.transform = `translate3d(${px}px, ${py}px, 0)`; };
+    const next = () => { paintChip(chip, ++colorAt); lastX = px; lastY = py; lastSpawn = performance.now(); };
+    const appear = () => {
+      layer.replaceChildren();
+      chip = fillChip(document.createElement('div')); chip.className = 'chip';
+      next(); setChipText(chip, nextWord()); place();
+      layer.append(chip); popChip(chip);
       hero.classList.add('chipping');
     };
-    const goIdle = () => { retire(active, 0); active = null; hero.classList.remove('chipping'); };
+    const goIdle = () => {
+      if (!chip) return;
+      const old = chip; chip = null;
+      old.classList.add('out'); setTimeout(() => old.remove(), 600);
+      hero.classList.remove('chipping');
+    };
     const onMove = e => {
       const r = hero.getBoundingClientRect();
       px = e.clientX - r.left; py = e.clientY - r.top;
-      const now = performance.now();
-      if (!active || (Math.hypot(px - lastX, py - lastY) >= SPAWN_DIST && now - lastSpawn >= SPAWN_GAP)) spawn(px, py);
-      if (!raf) raf = requestAnimationFrame(() => { raf = 0; if (active) place(active, px, py); });
+      if (!chip) appear();
+      else if (Math.hypot(px - lastX, py - lastY) >= SPAWN_DIST && performance.now() - lastSpawn >= SPAWN_GAP) { next(); morphChip(chip, nextWord()); }
+      if (!raf) raf = requestAnimationFrame(place);
       clearTimeout(idleT); idleT = setTimeout(goIdle, IDLE);
     };
     hero.addEventListener('pointermove', onMove, { passive: true });

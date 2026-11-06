@@ -159,6 +159,8 @@ p { margin: 0; text-wrap: pretty; }
 }
 .chip.dark-ink span { color: #1c1b19; }
 .chip.out { animation: chip-out .6s ease forwards; }
+.chip.swap { animation: chip-fade .18s ease forwards; }
+@keyframes chip-fade { to { opacity: 0; } }
 @keyframes chip-in { from { opacity: 0; transform: scale(.55); } }
 @keyframes chip-out { to { opacity: 0; filter: blur(3px); transform: scale(.92); } }
 @media (prefers-reduced-motion: reduce) {
@@ -1450,7 +1452,7 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
       'Cybersecurity', 'Banking', 'Payments', 'B2B SaaS', 'B2C Apps', 'Front-end', 'Prototyping', 'Web3', 'Micro-interactions'];
     // Figma multiplayer palette; amber takes dark ink for contrast
     const COLORS = [['#9747FF'], ['#0C8CE9'], ['#0E9F98'], ['#F2545B'], ['#FFB224', 'dark-ink'], ['#14AE5C']];
-    const SPAWN_DIST = 40, SPAWN_GAP = 1000, IDLE = 2000, TRAIL_LIFE = 900;
+    const SPAWN_DIST = 40, SPAWN_GAP = 1000, IDLE = 2000;
     let bag = [], lastWord = '', colorAt = Math.floor(Math.random() * COLORS.length);
     const nextWord = () => {
       if (!bag.length) { bag = WORDS.slice().sort(() => Math.random() - .5); if (bag[0] === lastWord) bag.push(bag.shift()); }
@@ -1464,7 +1466,7 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
       setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 650); }, delay);
     };
     const spawn = (x, y) => {
-      if (active) retire(active, TRAIL_LIFE);          // the previous chip stays where it was, like a collaborator, then dissolves
+      if (active) { active.dataset.out = '1'; active.classList.add('swap'); const old = active; setTimeout(() => old.remove(), 180); }   // one chip at a time: the new one replaces the old
       colorAt = (colorAt + 1) % COLORS.length;          // always a different colour from the last chip
       const [c, ink] = COLORS[colorAt];
       const el = document.createElement('div');

@@ -159,8 +159,6 @@ p { margin: 0; text-wrap: pretty; }
 }
 .chip.dark-ink span { color: #1c1b19; }
 .chip.out { animation: chip-out .6s ease forwards; }
-.chip.swap { animation: chip-fade .18s ease forwards; }
-@keyframes chip-fade { to { opacity: 0; } }
 @keyframes chip-in { from { opacity: 0; transform: scale(.55); } }
 @keyframes chip-out { to { opacity: 0; filter: blur(3px); transform: scale(.92); } }
 @media (prefers-reduced-motion: reduce) {
@@ -1466,7 +1464,7 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
       setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 650); }, delay);
     };
     const spawn = (x, y) => {
-      if (active) { active.dataset.out = '1'; active.classList.add('swap'); const old = active; setTimeout(() => old.remove(), 180); }   // one chip at a time: the new one replaces the old
+      layer.replaceChildren();                          // one cursor and chip at a time: the old ones vanish instantly
       colorAt = (colorAt + 1) % COLORS.length;          // always a different colour from the last chip
       const [c, ink] = COLORS[colorAt];
       const el = document.createElement('div');

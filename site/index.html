@@ -364,7 +364,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
 @media (max-width: 760px) { .cs-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 10px; } }
 
 .figure { margin: 0; display: grid; gap: 12px; }
-.figure .bare { width: 100%; height: auto; }   /* transparent artwork shown straight on the page, no frame */
+.figure .bare img { display: block; width: 100%; height: auto; }   /* transparent artwork shown straight on the page, no frame */
 .frame { background: var(--paper-2); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
 .frame.pad { padding: clamp(12px, 2.5vw, 32px); }
 .frame img { width: 100%; border-radius: 8px; }
@@ -1013,7 +1013,7 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
     <section class="cs-sec">
       <div class="side"><span class="label">Personalization</span><h2>The ending changes with the purpose</h2><p class="muted">Renovating, buying a car or going on vacation: the confirmation speaks to that plan and offers actions that fit it, like home insurance, a fuel-discount card or foreign currency.</p></div>
       <div class="main">
-        <figure class="figure"><img class="bare" src="img/bh-approved.webp" alt="Confirmation screens for renovation, car and vacation loans with tailored next actions" loading="lazy" width="2000" height="1296"><figcaption>Money-transfer confirmations with complementary actions per loan purpose.</figcaption></figure>
+        <figure class="figure"><div class="bare"><img src="img/bh-approved.webp" alt="Confirmation screens for renovation, car and vacation loans with tailored next actions" loading="lazy" width="2000" height="1296"></div><figcaption>Money-transfer confirmations with complementary actions per loan purpose.</figcaption></figure>
       </div>
     </section>
 
@@ -1190,7 +1190,7 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
   const zoomables = [];
   let lbList = [], lbIdx = 0, lbReturn = null, zoomed = false;
   function addZoomables(scope) {
-    scope.querySelectorAll('.view:not(#home) .frame, .flow .ph').forEach(z => {
+    scope.querySelectorAll('.view:not(#home) .frame, .view:not(#home) .figure .bare, .flow .ph').forEach(z => {
       if (zoomables.includes(z)) return;
       zoomables.push(z);
       z.classList.add('zoomable');

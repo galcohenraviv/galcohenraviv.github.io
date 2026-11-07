@@ -136,8 +136,12 @@ p { margin: 0; text-wrap: pretty; }
 .hero.chipping, .hero.chipping * { cursor: none; }
 @media (max-width: 760px) { .hero { min-height: 0; padding-block: 88px 72px; } }
 .cc-title {
-  font-family: var(--f-mono); font-weight: 500; font-size: clamp(2rem, 1.05rem + 3.9vw, 4.4rem);
-  line-height: 1.12; letter-spacing: -0.045em; max-width: 19ch; text-wrap: balance;
+  font-family: var(--f-mono); font-weight: 500; font-size: clamp(2.9rem, 1.4rem + 8vw, 9rem); white-space: nowrap;
+  line-height: 1; letter-spacing: -0.06em;
+}
+.cc-sub {
+  margin: clamp(14px, 1.6vw, 24px) 0 0; font-family: var(--f-mono); font-weight: 400;
+  font-size: clamp(1rem, .82rem + .9vw, 1.6rem); line-height: 1.3; letter-spacing: -0.02em; color: var(--ink-2);
 }
 .cc-title .pr { color: var(--accent); margin-right: .45ch; font-weight: 400; }
 .cc-title .ai { color: var(--accent); }
@@ -579,7 +583,8 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
   <section class="hero" id="top">
     <div class="chips" id="chips" aria-hidden="true"></div>
     <div class="wrap intro">
-      <h1 class="cc-title"><span class="pr" aria-hidden="true">&gt;</span>Hi, I'm Gal, a Product Designer &amp; Builder <span class="ai">with AI</span>.<span class="caret" aria-hidden="true"></span></h1>
+      <h1 class="cc-title"><span class="pr" aria-hidden="true">&gt;</span>Portfolio<span class="caret" aria-hidden="true"></span></h1>
+      <p class="cc-sub">Product Designer &amp; Product Builder</p>
     </div>
   </section>
 

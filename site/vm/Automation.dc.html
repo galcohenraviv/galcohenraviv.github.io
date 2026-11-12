@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>VoiceMind · Automation Opportunities</title>
+<script src="./support.js"></script>
+<script>try{parent!==window&&parent.postMessage({vmScreen:location.pathname.split('/').pop()},'*')}catch(e){}</script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F6F7F9}
+a{color:#064789;text-decoration:none}a:hover{color:#053A70}
+button,input,select,textarea{font:inherit;color:inherit}
+@media (max-width:760px){.vm-root{flex-direction:column!important;height:auto!important;overflow:visible!important}.vm-nav{flex:none!important;height:auto!important;border-right:0!important;border-bottom:1px solid #E5E7EB}.vm-list{flex-direction:row!important;overflow-x:auto}.vm-user{display:none!important}.vm-main{height:auto!important;overflow:visible!important}}
+
+/* ---- motion & delight ---- */
+@property --vmn{syntax:'<integer>';initial-value:0;inherits:false}
+@keyframes vmIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes vmFade{from{opacity:0}}
+@keyframes vmGrowX{from{transform:scaleX(0)}}
+@keyframes vmGrowY{from{transform:scaleY(0)}}
+@keyframes vmReveal{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes vmWave{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.5)}}
+@keyframes vmTwinkle{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.2) rotate(20deg)}}
+@keyframes vmRing{0%{box-shadow:0 0 0 0 rgba(6,71,137,.35)}100%{box-shadow:0 0 0 9px rgba(6,71,137,0)}}
+@keyframes vmCount{to{--vmn:var(--to)}}
+@keyframes vmPop{0%{opacity:0;transform:translateY(12px) scale(.94)}60%{opacity:1;transform:translateY(-2px) scale(1.01)}100%{transform:none}}
+@keyframes vmCheck{to{stroke-dashoffset:0}}
+@keyframes vmBurst{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(.4)}}
+.vm-main>header{animation:vmFade .4s ease both}
+.vm-main>header+div>*{animation:vmIn .6s cubic-bezier(.2,.7,.2,1) backwards}
+.vm-main>header+div>*:nth-child(2){animation-delay:.07s}.vm-main>header+div>*:nth-child(3){animation-delay:.14s}.vm-main>header+div>*:nth-child(4){animation-delay:.21s}.vm-main>header+div>*:nth-child(5){animation-delay:.28s}
+.vm-main>header+div>*>*{animation:vmIn .6s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:.08s}
+.vm-main>header+div>*>*:nth-child(2){animation-delay:.14s}.vm-main>header+div>*>*:nth-child(3){animation-delay:.2s}.vm-main>header+div>*>*:nth-child(4){animation-delay:.26s}
+.vm-main section[aria-label="Key metrics"]>div,.vm-main article,.vm-main a[style*="border-radius: 12px"]{transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s ease}
+.vm-main section[aria-label="Key metrics"]>div:hover,.vm-main article:hover,.vm-main a[style*="border-radius: 12px"]:hover{transform:translateY(-2px);box-shadow:0 10px 28px -14px rgba(17,24,39,.22)}
+button,.vm-main a[style*="height: 3"],.vm-main a[style*="height: 40px"],.vm-root a[style*="height: 40px"]{transition:transform .15s ease,filter .2s ease,background-color .2s ease,box-shadow .2s ease}
+button:active,.vm-root a[style*="height: 3"]:active,.vm-root a[style*="height: 40px"]:active{transform:scale(.97)}
+button[style*="background: #064789"]:hover,a[style*="background: #064789"]:hover{filter:brightness(1.08);box-shadow:0 6px 16px -6px rgba(6,71,137,.6)}
+button[style*="background: #FFFFFF"]:hover,.vm-main a[style*="border: 1px solid #E5E7EB"]:hover{background-color:#F7F8FA!important}
+.vm-list a{transition:background-color .2s ease,color .2s ease}
+.vm-list a svg{transition:transform .25s cubic-bezier(.2,.7,.2,1)}
+.vm-list a[aria-current="false"]:hover{background:#F3F4F6!important;color:#1F2937!important}
+.vm-list a:hover svg{transform:scale(1.08)}
+.vm-wave rect{transform-box:fill-box;transform-origin:center;animation:vmWave 1.1s ease-in-out 2}
+.vm-wave rect:nth-child(2){animation-delay:.12s}.vm-wave rect:nth-child(3){animation-delay:.24s}.vm-wave rect:nth-child(4){animation-delay:.36s}.vm-wave rect:nth-child(5){animation-delay:.48s}.vm-wave rect:nth-child(6){animation-delay:.6s}
+.vm-brand:hover .vm-wave rect{animation-iteration-count:infinite}
+svg[stroke^="url(#ai"]{transform-origin:center;animation:vmTwinkle 2.6s ease-in-out infinite}
+li[aria-current="step"]>span:first-child{animation:vmRing 1.8s ease-out 3}
+.vm-grow-x{transform-origin:left center;animation:vmGrowX .9s cubic-bezier(.2,.7,.2,1) .25s both}
+.vm-grow-y{transform-origin:bottom center;animation:vmGrowY .8s cubic-bezier(.2,.7,.2,1) both}
+.vm-reveal{animation:vmReveal 1.5s cubic-bezier(.4,0,.2,1) .3s both}
+.vm-count{counter-reset:vmn var(--vmn);animation:vmCount 1.2s cubic-bezier(.2,.7,.2,1) .3s forwards}.vm-count::before{content:counter(vmn)}
+tbody tr{transition:background-color .15s ease}tbody tr:hover{background-color:rgba(6,71,137,.035)!important}
+input[type=range]{transition:filter .2s}input[type=range]:active{filter:drop-shadow(0 0 6px rgba(6,71,137,.35))}
+:focus-visible{outline:2px solid rgba(6,71,137,.55);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* ===== VoiceMind design system v2 ===== */
+:root{--vm-primary:#064789;--vm-primary-hover:#053A70;--vm-pos:#82D4BB;--vm-pos-text:#2A7560;--vm-neu:#F3C98B;--vm-neu-text:#8A5A12;--vm-neg:#CC2936;--vm-ink:#111827;--vm-text:#1F2937;--vm-muted:#6B7280;--vm-line:#EDEFF3;--vm-canvas:#FBFCFD;--vm-r-chip:6px;--vm-r-input:10px;--vm-r-card:18px;--vm-shadow-card:0 1px 2px rgba(16,24,40,.04),0 12px 32px -18px rgba(16,24,40,.16);--vm-shadow-float:0 18px 40px -16px rgba(6,71,137,.45);--vm-grad-text:linear-gradient(90deg,#3FA88A 0%,#2D7FA8 45%,#064789 100%);--vm-grad-ai:linear-gradient(140deg,#82D4BB 0%,#3E86B8 45%,#064789 100%)}
+.vm-main{background:linear-gradient(rgba(6,71,137,.035) 1px,transparent 1px) 0 0/32px 32px,linear-gradient(90deg,rgba(6,71,137,.035) 1px,transparent 1px) 0 0/32px 32px,var(--vm-canvas)!important;background-attachment:local!important}
+.vm-main>header[style*="sticky"]{background:rgba(251,252,253,.82)!important;border-bottom-color:var(--vm-line)!important}
+.vm-main>header h1{font-size:22px!important;letter-spacing:-.02em!important;color:var(--vm-ink)}
+.vm-main section[style*="border-radius: 16px"],.vm-main aside[style*="border-radius: 16px"],.vm-main article,.vm-main section[aria-label="Key metrics"]>div{border-radius:var(--vm-r-card)!important;border-color:var(--vm-line)!important;box-shadow:var(--vm-shadow-card)}
+.vm-main h2[id$="-h"]{font-size:16px!important;letter-spacing:-.01em;color:var(--vm-ink)}
+.vm-card-ico{flex:none;color:var(--vm-primary)}
+span[style*="border-radius: 999px"][style*="padding: 3px 10px"]{border-radius:var(--vm-r-chip)!important}
+button[style*="height: 40px"],a[style*="height: 40px"],button[style*="height: 38px"],a[style*="height: 38px"],button[style*="height: 34px"],a[style*="height: 34px"],button[style*="height: 32px"],button[style*="height: 30px"],.vm-main header div[style*="height: 38px"]{border-radius:999px!important}
+[role="group"][aria-label="Date range"],[role="group"][aria-label="Date range"] button{border-radius:999px!important}
+thead tr{color:#9CA3AF!important}
+.vm-list a{border-radius:12px!important}
+.vm-profile{transition:border-color .2s ease,box-shadow .2s ease}.vm-profile:hover{border-color:#D9DCE2;box-shadow:0 4px 14px -8px rgba(16,24,40,.25)}
+.vm-view{transition:background-color .2s ease}.vm-view:hover{background:#F3F4F6}
+.vm-pill{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;border-radius:999px;border:1px solid #CFE0EE;background:#FFFFFF;color:var(--vm-primary);font-size:13px;font-weight:600;text-decoration:none;cursor:pointer;transition:background-color .2s ease,border-color .2s ease,transform .15s ease,box-shadow .2s ease}
+.vm-pill:hover{background:rgba(6,71,137,.05);border-color:#9DBBD6;color:var(--vm-primary)}.vm-pill:active{transform:scale(.97)}
+.vm-pill-ai{background:var(--vm-primary);border-color:var(--vm-primary);color:#FFFFFF;box-shadow:0 6px 16px -8px rgba(6,71,137,.7)}.vm-pill-ai:hover{background:var(--vm-primary-hover);color:#FFFFFF}
+.vm-grad-text{background:var(--vm-grad-text);-webkit-background-clip:text;background-clip:text;color:transparent}
+@keyframes vmOrb{0%,100%{box-shadow:0 0 0 8px rgba(6,71,137,.06),0 0 0 18px rgba(130,212,187,.08),var(--vm-shadow-float)}50%{box-shadow:0 0 0 12px rgba(6,71,137,.08),0 0 0 26px rgba(130,212,187,.1),var(--vm-shadow-float)}}
+.vm-orb{position:absolute;right:28px;bottom:28px;z-index:5;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--vm-grad-ai);animation:vmOrb 3.2s ease-in-out infinite;transition:transform .25s cubic-bezier(.2,.7,.2,1)}
+.vm-orb:hover{transform:scale(1.07) rotate(-6deg)}
+.vm-orb::after{content:attr(data-tip);position:absolute;right:68px;top:50%;transform:translate(6px,-50%);opacity:0;white-space:nowrap;padding:6px 10px;border-radius:8px;background:var(--vm-ink);color:#FFFFFF;font-size:12px;font-weight:500;pointer-events:none;transition:opacity .2s ease,transform .2s ease}
+.vm-orb:hover::after,.vm-orb:focus-visible::after{opacity:1;transform:translate(0,-50%)}
+@media (max-width:760px){.vm-orb{right:16px;bottom:16px}}
+
+/* suggested list: scroll + show more */
+.vm-sug-list{scrollbar-width:thin;scrollbar-color:#D9DCE2 transparent}
+.vm-sug{animation:vmSugIn .45s cubic-bezier(.2,.7,.2,1) backwards}
+@keyframes vmSugIn{from{opacity:0;transform:translateY(10px)}}
+.vm-more:hover{background:rgba(6,71,137,0.06)!important;border-color:rgba(6,71,137,0.3)!important}
+@media (prefers-reduced-motion:reduce){.vm-sug{animation:none}}
+</style>
+</helmet>
+<div class="vm-root" style="height: 100vh; display: flex; overflow: hidden; background: #F6F7F9; color: #1F2937; font-family: Inter, -apple-system, 'Segoe UI', sans-serif; font-size: 14px; -webkit-font-smoothing: antialiased;">
+
+  <nav class="vm-nav" aria-label="Main" style="flex: 0 0 248px; height: 100%; box-sizing: border-box; padding: 18px 14px; display: flex; flex-direction: column; gap: 18px; background: #FFFFFF; border-right: 1px solid #EDEFF3; overflow: hidden;">
+    <div class="vm-brand" style="display: flex; align-items: center; gap: 10px; padding: 2px 8px; cursor: default;">
+      <svg class="vm-wave" width="30" height="24" viewBox="14 17 82 60" role="img" aria-label="VoiceMind logo" style="flex: none;"><g><rect x="16.5" y="33" width="9" height="28" rx="4.5" fill="#F3C98B"></rect><rect x="30.0" y="19" width="9" height="56" rx="4.5" fill="#82D4BB"></rect><rect x="43.5" y="26" width="9" height="41" rx="4.5" fill="#82D4BB"></rect><rect x="57.0" y="36" width="9" height="22" rx="4.5" fill="#CC2936"></rect><rect x="70.5" y="30" width="9" height="34" rx="4.5" fill="#F3C98B"></rect><rect x="84.0" y="40" width="9" height="14" rx="4.5" fill="#CC2936"></rect></g></svg>
+      <div style="display: flex; flex-direction: column;"><span style="font-size: 14px; font-weight: 600;">VoiceMind AI</span><span style="font-size: 12px; color: #6B7280;">Customer Insights</span></div>
+    </div>
+    <div class="vm-list" style="display: flex; flex-direction: column; gap: 2px;">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="5"><a href="{{n.href}}" aria-current="{{n.current}}" style="display: flex; align-items: center; gap: 12px; min-height: 40px; padding: 0 12px; border-radius: 12px; background: {{n.bg}}; color: {{n.fg}}; font-size: 14px; font-weight: {{n.weight}}; text-decoration: none; white-space: nowrap;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{n.d}}"></path></svg>{{n.label}}</a></sc-for>
+    </div>
+    <div class="vm-user vm-profile" style="margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid #EDEFF3; border-radius: 14px; background: #FFFFFF;">
+      <img src="data:image/jpeg;base64,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" alt="" width="34" height="34" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; flex: none; display: block;">
+      <div style="display: flex; flex-direction: column;"><span style="font-size: 13px; font-weight: 600;">Alex Morgan</span><span style="font-size: 12px; color: #6B7280;">Team Lead</span></div>
+    </div>
+  </nav>
+
+  <main class="vm-main" style="flex: 1 1 auto; min-width: 0; height: 100%; overflow-y: auto; background: radial-gradient(760px 260px at 88% -60px, rgba(212,108,116,0.07), transparent 70%), radial-gradient(760px 260px at 30% -80px, rgba(117,132,176,0.08), transparent 70%), #F6F7F9; background-attachment: local;">
+    <header style="position: sticky; top: 0; z-index: 2; background: rgba(246,247,249,0.88); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid #E5E7EB;">
+      <div style="max-width: 1200px; margin: 0 auto; padding: 16px 32px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;">
+        <div style="display: flex; flex-direction: column; gap: 2px;">
+          <h1 style="margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -0.01em;">Automation Opportunities</h1>
+          <p style="margin: 0; font-size: 13px; color: #4B5563;">Identify and manage areas where AI-driven responses can improve efficiency</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <label for="q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);">Search opportunities</label>
+          <div style="display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 12px; border-radius: 10px; background: #FFFFFF; border: 1px solid #E5E7EB;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+            <input id="q" type="search" placeholder="Search opportunities" style="border: 0; background: transparent; outline: none; font-size: 13px; width: 180px;">
+          </div>
+          <a href="AutomationStep1.dc.html" style="height: 40px; padding: 0 16px; border-radius: 10px; background: #064789; color: #FFFFFF; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; text-decoration: none;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Create rule</a>
+        </div>
+      </div>
+    </header>
+
+    <div style="max-width: 1200px; margin: 0 auto; padding: 24px 32px 48px; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 20px;">
+
+      <section aria-labelledby="cat-h" style="flex: 1 1 420px; min-width: 0; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 16px; padding: 20px 22px; display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;">
+          <h2 id="cat-h" style="margin: 0; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px;"><svg class="vm-card-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z"></path></svg>Automation potential by category</h2>
+          <div style="display: flex; gap: 14px; font-size: 12px; color: #4B5563;">
+            <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; border-radius: 3px; background: #064789;"></span>Automated</span>
+            <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; border-radius: 3px; background: rgba(6,71,137,0.14);"></span>Potential</span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px;" role="list">
+          <sc-for list="{{cats}}" as="c" hint-placeholder-count="6">
+            <div role="listitem" style="display: flex; flex-direction: column; gap: 6px;">
+              <div style="display: flex; justify-content: space-between; font-size: 13px;"><span style="font-weight: 500;">{{c.name}}</span><span style="color: #4B5563; font-size: 12px;">{{c.auto}} of {{c.pot}} · <span style="color: #064789; font-weight: 600;">{{c.pct}}</span></span></div>
+              <div style="height: 10px; border-radius: 6px; background: #F6F7F9; overflow: hidden;"><div class="vm-grow-x" style="height: 10px; width: {{c.potW}}; background: rgba(6,71,137,0.14); border-radius: 6px;"><div class="vm-grow-x" style="animation-delay: .5s; height: 10px; width: {{c.autoW}}; background: #064789; border-radius: 6px;"></div></div></div>
+            </div>
+          </sc-for>
+        </div>
+        <p style="margin: 0; font-size: 12px; color: #6B7280;">Number of interactions, last 30 days</p>
+      </section>
+
+      <section aria-labelledby="sug-h" style="flex: 1 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0 4px;">
+          <h2 id="sug-h" style="margin: 0; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="url(#aiSug)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><linearGradient id="aiSug" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D46C74"></stop><stop offset="1" stop-color="#7584B0"></stop></linearGradient></defs><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"></path></svg>Suggested auto-responses</h2>
+          <span style="font-size: 12px; color: #6B7280;">Based on past conversations</span>
+        </div>
+        <div class="vm-sug-list" tabindex="0" aria-label="Suggested auto-responses" style="max-height: 620px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 2px 6px 2px 2px; overscroll-behavior: contain;">
+        <sc-for list="{{sugs}}" as="s" hint-placeholder-count="3">
+          <article class="vm-sug" style="animation-delay: {{s.delay}}; flex: none; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 16px; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;">
+              <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; color: #6B7280;">Example query</span><span style="font-size: 14px; font-weight: 600;">“{{s.q}}”</span></div>
+              <span style="flex: none; font-size: 12px; font-weight: 600; color: {{s.cfg}}; background: {{s.cbg}}; padding: 3px 10px; border-radius: 999px;">{{s.conf}} confidence</span>
+            </div>
+            <div style="background: #F7F8FA; border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;">
+              <span style="font-size: 12px; color: #6B7280; display: flex; align-items: center; gap: 6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#064789" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"></path></svg>Recommended response</span>
+              <span style="font-size: 13px; line-height: 1.5; color: #374151;">{{s.a}}</span>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 8px;">
+              <a href="AutomationStep1.dc.html" style="height: 34px; padding: 0 14px; border-radius: 9px; background: rgba(6,71,137,0.08); color: #064789; font-size: 12px; font-weight: 600; display: flex; align-items: center; text-decoration: none;">Edit &amp; publish</a>
+            </div>
+          </article>
+        </sc-for>
+        <button type="button" onClick="{{more}}" class="vm-more" style="display: {{moreShow}}; flex: none; align-self: center; height: 36px; padding: 0 16px; border: 1px solid #E5E7EB; border-radius: 999px; background: #FFFFFF; color: #064789; font-size: 13px; font-weight: 600; cursor: pointer; align-items: center; gap: 6px;">Show more<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { shown: 3 }; }
+  renderVals() {
+    const ACTIVE = 'Automation';
+    const items = [['Dashboard','Main.dc.html','M4 4h6v7H4zM14 4h6v4h-6zM14 12h6v8h-6zM4 15h6v5H4z'],['Topics & Trends','Topics.dc.html','M3 17l6-6 4 4 8-8M15 7h6v6'],['Agents','Agents.dc.html','M16 20v-1a4 4 0 00-4-4H7a4 4 0 00-4 4v1M9.5 11a3.5 3.5 0 100-7 3.5 3.5 0 000 7zM21 20v-1a4 4 0 00-3-3.9M15 4.1a3.5 3.5 0 010 6.8'],['Automation','Automation.dc.html','M13 2L4 14h7l-1 8 9-12h-7z'],['Settings','#','M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1M15 4v4M9 10v4M17 16v4']];
+    const nav = items.map(([label, href, d]) => { const on = label === ACTIVE; return { label, href, d, current: on ? 'page' : 'false', bg: on ? 'rgba(6,71,137,0.07)' : 'transparent', fg: on ? '#064789' : '#374151', weight: on ? 600 : 500 }; });
+    const MAX = 2600;
+    const cats = [['Billing', 900, 2150], ['Account setup', 1300, 2150], ['Tech support', 1800, 2500], ['Order tracking', 1550, 2000], ['Password reset', 1400, 2500], ['Refunds', 900, 1250]].map(([name, a, p]) => ({ name, auto: a.toLocaleString('en-US'), pot: p.toLocaleString('en-US'), pct: Math.round(a / p * 100) + '%', potW: Math.round(p / MAX * 100) + '%', autoW: Math.round(a / p * 100) + '%' }));
+    const tone = (n) => n >= 90 ? ['#2A7560', 'rgba(130,212,187,0.24)'] : n >= 80 ? ['#8A5A12', 'rgba(243,201,139,0.32)'] : ['#CC2936', 'rgba(204,41,54,0.08)'];
+    const sugs = [['How do I reset my password?', 'You can reset your password by clicking “Forgot password” on the login page and following the email instructions.', 94], ['Where is my order?', 'You can track your order status in your account dashboard or use the tracking number provided in your confirmation email.', 87], ['How do I cancel my subscription?', 'To cancel your subscription, go to Account Settings › Billing › Cancel Subscription. You’ll retain access until your current billing period ends.', 72], ['How do I update my payment method?', 'Go to Account Settings › Billing › Payment methods, add your new card and set it as default.', 91], ['Can I change my delivery address?', 'Yes. If your order hasn’t shipped yet, open it in your account and choose “Change address”.', 88], ['How do I request a refund?', 'Open the order in your account, choose “Request refund” and pick a reason. Refunds arrive within 5–7 business days.', 84], ['Why was I charged twice?', 'A duplicate charge is usually a temporary authorization that disappears within 3 days. If it doesn’t, we’ll refund it right away.', 79], ['How do I book a technician visit?', 'You can book a visit from the Appointments page and choose any available time slot that suits you.', 86], ['How do I download my invoice?', 'Invoices are under Account Settings › Billing › Invoices. Click any invoice to download it as a PDF.', 93]].map(([q, a, n], i) => { const [cfg, cbg] = tone(n); return { q, a, conf: n + '%', cfg, cbg, delay: (i < 3 ? i * 0.06 : (i % 3) * 0.08).toFixed(2) + 's' }; });
+    const all = sugs.length, shown = Math.min(this.state.shown, all);
+    const more = () => this.setState({ shown: this.state.shown + 3 });
+    return { nav, cats, sugs: sugs.slice(0, shown), more, moreShow: shown < all ? 'flex' : 'none' };
+  }
+}
+</script>
+</body>
+</html>

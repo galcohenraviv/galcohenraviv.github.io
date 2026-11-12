@@ -514,6 +514,49 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
 /* words light up as you scroll (script-driven, resting state is fully lit) */
 .lit .w { transition: opacity .25s linear; }
 
+/* ---------- VoiceMind V2: live prototype, centred at the bottom with a caption per screen ---------- */
+.proto { border-top: 1px solid var(--line); padding-block: clamp(32px, 4vw, 56px) clamp(48px, 7vw, 96px); display: grid; gap: 18px; }
+.proto-text { display: grid; gap: 14px; }
+.proto-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 24px; }
+.proto-ctrl { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.proto-steps { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.proto-steps button, .proto-arr {
+  font: 500 .78rem/1 var(--f-mono); color: var(--ink-2); background: transparent; border: 1px solid var(--line);
+  border-radius: 999px; padding: 7px 11px; cursor: pointer; transition: background-color .25s, color .25s, border-color .25s;
+}
+.proto-arr { padding: 7px 10px; }
+.proto-steps button:hover, .proto-arr:hover { border-color: var(--ink-3); color: var(--ink); }
+.proto-steps button[aria-current="step"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.proto-cap { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 4px clamp(20px, 4vw, 64px); align-items: baseline; }
+.proto-n { grid-column: 1; grid-row: 1; font-size: .75rem; color: var(--accent); }
+.proto-t { grid-column: 1; grid-row: 2; font-size: clamp(1.3rem, 1rem + 1vw, 1.9rem); letter-spacing: -0.03em; line-height: 1.1; }
+.proto-d { grid-column: 2; grid-row: 1 / span 2; align-self: end; font-size: var(--step-0); line-height: 1.5; color: var(--ink); max-width: 68ch; margin: 0; }
+.proto-try { grid-column: 2; font-size: .9rem; color: var(--ink-2); margin: 0; }
+.proto-try b { font-weight: 600; color: var(--accent-ink); }
+.proto-cap.swap > * { animation: proto-in .5s var(--ease) both; }
+.proto-cap.swap > :nth-child(2) { animation-delay: .04s; } .proto-cap.swap > :nth-child(3) { animation-delay: .08s; } .proto-cap.swap > :nth-child(4) { animation-delay: .12s; }
+@keyframes proto-in { from { opacity: 0; transform: translateY(8px); } }
+.proto-stage { display: grid; justify-items: center; gap: 12px; padding-inline: clamp(16px, 2.5vw, 40px); }
+.proto-screen {
+  position: relative; width: var(--pw, 100%); border-radius: 14px; overflow: hidden; background: #F6F7F9;
+  border: 1px solid var(--line); box-shadow: 0 30px 80px -40px color-mix(in oklab, var(--ink) 55%, transparent), 0 2px 6px -2px color-mix(in oklab, var(--ink) 18%, transparent);
+}
+.proto-screen .pv-bar { position: relative; display: block; height: 26px; background: var(--paper-2); border-bottom: 1px solid var(--line); }
+.proto-vp { position: relative; width: 100%; height: var(--ph, 70svh); overflow: hidden; }
+.proto-vp iframe { position: absolute; left: 0; top: 0; border: 0; width: var(--iw, 100%); height: var(--ih, 100%); transform-origin: 0 0; transform: scale(var(--ps, 1)); background: #F6F7F9; }
+.proto-nav { width: var(--pw, 100%); display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: .78rem; color: var(--ink-3); }
+.proto-open { color: var(--ink-2); text-decoration: none; }
+.proto-open:hover { color: var(--accent); }
+@media (max-width: 760px) {
+  .proto-cap { grid-template-columns: 1fr; }
+  .proto-n, .proto-t, .proto-d, .proto-try { grid-column: 1; grid-row: auto; }
+  .proto-top { display: grid; }
+  .proto-ctrl { margin-inline: -16px; padding-inline: 16px; }
+  .proto-steps { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .proto-steps button { flex: none; }
+  .proto-nav span { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .proto-cap.swap > * { animation: none; } }
 /* zoomable screenshots */
 .zoomable { cursor: zoom-in; position: relative; }
 .zoomable::after {
@@ -603,6 +646,16 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
             <p>An NLP and GenAI platform that shows service managers what customers are saying across every channel, and lets them automate the repetitive parts without losing trust.</p>
             <div class="tags"><span class="tag">UX research</span><span class="tag">Product design</span><span class="tag">Dashboard</span><span class="tag">AI automation</span></div>
             <span class="read">Read case study <span class="arr">→</span></span>
+          </div>
+        </a>
+        <a class="case-row reveal" href="#voicemind-v2" data-cursor="Try the prototype">
+          <div class="shot-wrap"><div class="shot"><div class="pv" style="--hue:#6d5cf0"><div class="pv-l pv-win" style="left:9%;top:13%;width:104%;--d:-6"><i class="pv-bar" aria-hidden="true"></i><img src="img/pv-vm-base.jpg?v=2" alt="VoiceMind customer insights dashboard" width="1600" height="1200" loading="lazy"></div><div class="pv-l pv-card" style="left:4%;bottom:8%;width:60%;--d:18;--r:-1.5deg"><img src="img/pv-vm-float.jpg?v=2" alt="Suggested auto-response with 94% confidence" width="900" height="351" loading="lazy"></div></div></div></div>
+          <div class="case-meta">
+            <span class="idx">01 · V2 · Live prototype</span>
+            <h3>VoiceMind V2</h3>
+            <p>An NLP and GenAI platform that shows service managers what customers are saying across every channel, and lets them automate the repetitive parts without losing trust.</p>
+            <div class="tags"><span class="tag">UX research</span><span class="tag">Product design</span><span class="tag">Dashboard</span><span class="tag">AI automation</span></div>
+            <span class="read">Try the prototype <span class="arr">→</span></span>
           </div>
         </a>
         <a class="case-row reveal" href="#cal" data-cursor="Read case study">
@@ -849,6 +902,68 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
       </div>
     </section>
   </div>
+  <div class="wrap"><a class="next" href="#cal" data-cursor="Next case"><span class="label">Next case</span><h2>Eye-tracking CAL's new app →</h2></a></div>
+</main>
+
+<!-- ======================= VoiceMind V2: live prototype ======================= -->
+<main class="view" id="voicemind-v2" hidden>
+  <div class="wrap">
+    <header class="cs-head">
+      <a class="back" href="#work"><span class="arr">←</span> All work</a>
+      <span class="label">VoiceMind V2 · NLP-powered customer service platform</span>
+      <h1>Making AI automation something service teams can trust</h1>
+      <p class="lede">A walk through the working prototype: from live customer insight to an automation rule that proves itself before it goes live.</p>
+      <dl class="cs-facts">
+        <div><dt>Role</dt><dd>UX researcher &amp; product designer</dd></div>
+        <div><dt>Product</dt><dd>B2B SaaS, web app</dd></div>
+        <div><dt>Users</dt><dd>Service, QA &amp; automation leads</dd></div>
+        <div><dt>Tech</dt><dd>NLP, GenAI</dd></div>
+      </dl>
+    </header>
+
+    <section class="cs-sec">
+      <div class="side"><span class="label">Product overview</span><h2>One place to hear every customer</h2></div>
+      <div class="main prose">
+        <p class="big">VoiceMind unifies conversations from phone, chat, email and social, and uses NLP and GenAI to turn them into live insight.</p>
+        <p>Service managers see sentiment, volume and the top complaints at a glance. Automation leads find the repetitive questions worth automating. QA and training leads coach from real calls, with AI summaries and recommendations.</p>
+      </div>
+    </section>
+
+    <section class="cs-sec">
+      <div class="side"><span class="label">The challenge</span><h2>Lots of data, little trust</h2></div>
+      <div class="main prose">
+        <p class="big">Support leaders can't see recurring pain points until customers escalate, and their teams spend hours answering the same questions.</p>
+        <p>They hope AI can cut the workload but are skeptical about letting it talk to customers. So the design had to do more than show data: every suggestion explains itself, every rule is tested on real messages, and the expected impact is clear before anything goes live.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="proto" id="vmProto" aria-label="VoiceMind live prototype">
+    <div class="wrap proto-text">
+      <div class="proto-top">
+        <span class="label">Live prototype</span>
+        <div class="proto-ctrl">
+          <button type="button" class="proto-arr" data-go="-1" aria-label="Previous screen">←</button>
+          <nav class="proto-steps" aria-label="Prototype screens"></nav>
+          <button type="button" class="proto-arr" data-go="1" aria-label="Next screen">→</button>
+        </div>
+      </div>
+      <div class="proto-cap" aria-live="polite">
+        <span class="proto-n mono"></span>
+        <h2 class="proto-t"></h2>
+        <p class="proto-d"></p>
+        <p class="proto-try"></p>
+      </div>
+    </div>
+    <div class="proto-stage">
+      <div class="proto-screen">
+        <i class="pv-bar" aria-hidden="true"></i>
+        <div class="proto-vp"><iframe id="vmFrame" title="VoiceMind interactive prototype" src="vm/Main.dc.html" loading="lazy"></iframe></div>
+      </div>
+      <div class="proto-nav"><span class="mono">Click anything that looks clickable. The caption follows you.</span><a class="proto-open mono" href="vm/Main.dc.html" target="_blank" rel="noopener">Open full screen ↗</a></div>
+    </div>
+  </section>
+
   <div class="wrap"><a class="next" href="#cal" data-cursor="Next case"><span class="label">Next case</span><h2>Eye-tracking CAL's new app →</h2></a></div>
 </main>
 
@@ -1113,7 +1228,7 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
   function hideCursor() { active = null; cursor.classList.remove('on'); }
 
   /* ---------- router ---------- */
-  const views = ['liquidity', 'swap', 'earn', 'voicemind', 'cal', 'hapoalim'];
+  const views = ['liquidity', 'swap', 'earn', 'voicemind', 'voicemind-v2', 'cal', 'hapoalim'];
   const home = document.getElementById('home');
   function route() {
     const h = location.hash.slice(1);
@@ -1186,6 +1301,94 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
     flow.scrollLeft = drag.left - (e.clientX - drag.x);
   });
   addEventListener('pointerup', () => { drag = null; flow.classList.remove('dragging'); });
+
+  /* ---------- VoiceMind V2: prototype stage and captions ---------- */
+  (() => {
+    const sec = document.getElementById('vmProto'), frame = document.getElementById('vmFrame');
+    if (!sec || !frame) return;
+    const VM = 'vm/';   // where the prototype screens live (the single-file share build points this at the live site)
+    const SCREENS = [
+      ['Main.dc.html', 'Dashboard', 'Customer Insights',
+        'The service manager\'s home: average sentiment, interactions per channel, the complaint that\'s trending up and how much of the load automation already covers.',
+        'Switch the date range, open <b>Filters</b>, or click a topic to drill into it.'],
+      ['Topics.dc.html', 'Topics', 'Topics & Trends',
+        'Every topic customers raise, ranked by volume, sentiment and trend, so recurring pain shows up before it turns into escalations.',
+        'Filter the list, then follow a topic into <b>Automation</b>.'],
+      ['Automation.dc.html', 'Automation', 'Automation opportunities',
+        'Repetitive questions grouped by category. Each one comes with a suggested auto-reply and a confidence score, so the team knows how far to trust it.',
+        'Click <b>Create rule</b>, or <b>Edit &amp; publish</b> on a suggestion.'],
+      ['AutomationStep1.dc.html', 'Trigger', 'Step 1 · Define the trigger',
+        'Keywords, sentiment and channels decide when the rule fires. The live preview shows which real past messages would match, before the rule exists.',
+        'Change a keyword or channel and watch the preview, then <b>Next</b>.'],
+      ['AutomationStep2.dc.html', 'Response', 'Step 2 · Create the response',
+        'Write the reply or generate it with AI, allow variations, and set the confidence threshold a reply must reach before it\'s sent.',
+        'Try <b>Generate with AI</b>, pick a quick template, or move the threshold.'],
+      ['AutomationStep3.dc.html', 'Review', 'Step 3 · Review & activate',
+        'A summary of the rule, who gets notified and when it runs, next to the expected impact and test results: the answer to "is this worth it?"',
+        'Click <b>Activate automation</b>.'],
+      ['Agents.dc.html', 'Agents', 'Agents overview',
+        'Sentiment, first response time and auto-assist usage per agent, so leads can see who needs support and who to learn from.',
+        'Select an agent, then review their recent calls.'],
+      ['CallAssistant.dc.html', 'Call', 'Call Optimization Assistant',
+        'One call, summarized: what happened, what the AI recommends and the coaching resources that fit, so feedback comes from a real conversation.',
+        'Mark the call, or share feedback with the agent.'],
+    ];
+    const steps = sec.querySelector('.proto-steps'), cap = sec.querySelector('.proto-cap');
+    const open = sec.querySelector('.proto-open');
+    const [nEl, tEl, dEl, tryEl] = ['.proto-n', '.proto-t', '.proto-d', '.proto-try'].map(q => sec.querySelector(q));
+    let cur = -1;
+    SCREENS.forEach(([file, short], i) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = `${String(i + 1).padStart(2, '0')} ${short}`;
+      b.addEventListener('click', () => go(i));
+      steps.append(b);
+    });
+    function show(i) {
+      if (i < 0 || i === cur) return;
+      cur = i;
+      const [file, , title, desc, tryIt] = SCREENS[i];
+      nEl.textContent = `${String(i + 1).padStart(2, '0')} / ${String(SCREENS.length).padStart(2, '0')}`;
+      tEl.textContent = title; dEl.textContent = desc; tryEl.innerHTML = 'Try: ' + tryIt;
+      cap.classList.remove('swap'); void cap.offsetWidth; cap.classList.add('swap');
+      [...steps.children].forEach((b, k) => { if (k === i) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+      steps.children[i].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      open.href = VM + file;
+    }
+    function go(i) {
+      i = (i + SCREENS.length) % SCREENS.length;
+      show(i);
+      frame.src = VM + SCREENS[i][0];
+    }
+    sec.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => go(cur + +b.dataset.go)));
+    // the prototype's own links move it between screens; each screen reports its file name
+    addEventListener('message', e => {
+      if (e.source !== frame.contentWindow || !e.data || typeof e.data.vmScreen !== 'string') return;
+      show(SCREENS.findIndex(sc => sc[0] === e.data.vmScreen));
+    });
+    show(0);
+    // size: as wide as the stage allows and as tall as the window leaves under the caption.
+    // The design is rendered at a desktop width (at least 1280 logical px) and scaled to fit; phones get the fluid layout.
+    function fit() {
+      const stage = sec.querySelector('.proto-stage');
+      const cs = getComputedStyle(stage);
+      const w = Math.min(1520, stage.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight));
+      const capH = sec.querySelector('.proto-text').offsetHeight;
+      const navH = sec.querySelector('.proto-nav').offsetHeight;
+      const room = innerHeight - 64 - 18 - capH - 18 - 26 - 12 - navH - 16;   // header, gaps, caption, window bar, nav
+      const phone = w < 720;
+      const h = Math.round(phone ? innerHeight * .72 : Math.max(440, room));
+      const scale = phone ? 1 : Math.min(1, w / 1280);
+      sec.style.setProperty('--pw', Math.round(w) + 'px');
+      sec.style.setProperty('--ph', h + 'px');
+      sec.style.setProperty('--ps', scale.toFixed(4));
+      sec.style.setProperty('--iw', Math.round(w / scale) + 'px');
+      sec.style.setProperty('--ih', Math.round(h / scale) + 'px');
+    }
+    fit();
+    new ResizeObserver(fit).observe(sec);
+    addEventListener('resize', fit);
+    addEventListener('hashchange', () => requestAnimationFrame(fit));
+  })();
 
   /* ---------- lightbox ---------- */
   const lb = document.getElementById('lb'), lbStage = document.getElementById('lbStage'), lbImg = document.getElementById('lbImg');

@@ -514,6 +514,43 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
 /* words light up as you scroll (script-driven, resting state is fully lit) */
 .lit .w { transition: opacity .25s linear; }
 
+/* ---------- CAL: phone screens on the page, annotated screens, small tallies ---------- */
+.cs-sec > .wide { grid-column: 1 / -1; }
+.phones { display: grid; gap: clamp(12px, 2vw, 24px); justify-content: start; }
+.phones.one { grid-template-columns: minmax(0, 300px); }
+.phones.two { grid-template-columns: repeat(2, minmax(0, max-content)); }
+.phones .bare img { filter: drop-shadow(0 18px 30px color-mix(in oklab, var(--ink) 18%, transparent)); border-radius: 10px; }
+.phones.one .bare img, .phones.two .bare img { max-height: 620px; width: auto; max-width: 100%; }
+.phones.short .bare img { max-height: 420px; }
+.finding { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(20px, 3vw, 40px); align-items: start; padding-block: 8px 28px; }
+.finding + .finding { border-top: 1px solid var(--line); padding-top: 28px; }
+.tally { list-style: none; margin: 4px 0; padding: 0; display: grid; gap: 6px; }
+.tally li { display: grid; grid-template-columns: 2rem minmax(0, 1fr); align-items: baseline; color: var(--ink-2); font-size: .95rem; }
+.tally b { font-family: var(--f-mono); font-weight: 500; color: var(--accent-ink); }
+.times { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-block: 1px solid var(--line); }
+.times > div { display: grid; gap: 2px; padding: 14px 16px 14px 0; }
+.times > div + div { padding-left: 16px; border-left: 1px solid var(--line); }
+.times b { font-size: 1.6rem; font-weight: 500; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.bars.avg .track { position: relative; overflow: visible; }
+.bars.avg .track::after { content: ""; position: absolute; left: var(--avg); top: -5px; bottom: -5px; width: 2px; background: var(--ink); border-radius: 1px; }
+.bars.avg .fill { overflow: hidden; }
+.anno { position: relative; }
+.anno .pin {
+  position: absolute; transform: translateY(-50%); font: 500 .8rem/1 var(--f-mono); color: #fff; background: var(--accent);
+  padding: 6px 8px; border-radius: 999px; box-shadow: 0 4px 12px -4px color-mix(in oklab, var(--accent) 60%, transparent); pointer-events: none;
+}
+.anno .pin.l { right: calc(100% + 12px); } .anno .pin.r { left: calc(100% + 12px); }
+.anno .pin::after { content: ""; position: absolute; top: 50%; width: 12px; height: 1.5px; background: var(--accent); }
+.anno .pin.l::after { left: 100%; } .anno .pin.r::after { right: 100%; }
+.phones.one:has(.anno) { padding-inline: 58px; grid-template-columns: minmax(0, 300px); }
+@media (max-width: 760px) {
+  .finding { grid-template-columns: 1fr; }
+  .phones.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .phones.one { grid-template-columns: minmax(0, 240px); }
+  .phones .bare img { max-height: none !important; width: 100% !important; }
+  .phones.one:has(.anno) { padding-inline: 50px; grid-template-columns: minmax(0, 1fr); }
+}
+
 /* zoomable screenshots */
 .zoomable { cursor: zoom-in; position: relative; }
 .zoomable::after {
@@ -859,9 +896,9 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
       <a class="back" href="#work"><span class="arr">←</span> All work</a>
       <span class="label">CAL · Mobile app · Eye-tracking study</span>
       <h1>What 15 customers' eyes said about CAL's new app</h1>
-      <p class="lede">I designed key screens in CAL's new app. To check that people noticed what mattered, we put Tobii Pro Glasses 2 on real customers and watched where they actually looked.</p>
+      <p class="lede">I designed the UX, UI and microcopy for key screens in CAL's new app, including the instant-loan flow. Before launch, we put Tobii Pro Glasses 2 on real customers to see whether they noticed what mattered, and where they got stuck.</p>
       <dl class="cs-facts">
-        <div><dt>Role</dt><dd>UX designer &amp; UX researcher</dd></div>
+        <div><dt>Role</dt><dd>UX, UI &amp; microcopy</dd></div>
         <div><dt>Company</dt><dd>CAL, Israel</dd></div>
         <div><dt>Years</dt><dd>2021 – 2022</dd></div>
         <div><dt>Method</dt><dd>Eye-tracking usability tests</dd></div>
@@ -876,7 +913,7 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
     </div>
 
     <section class="cs-sec">
-      <div class="side"><span class="label">The challenge</span><h2>Do people see what we designed for them?</h2></div>
+      <div class="side"><span class="label">The challenge</span><h2>Do people see what we designed for them?</h2><p class="muted">The new app moved money actions, like an instant loan, onto the dashboard. Clicks and funnels tell you where people drop off. They don't tell you what people looked at and missed.</p></div>
       <div class="main">
         <div class="cols">
           <div class="note"><h3>Do users notice the important buttons in key actions?</h3></div>
@@ -884,76 +921,139 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
           <div class="note"><h3>Which areas get attention, and which are overlooked?</h3></div>
           <div class="note"><h3>How do we cut drop-off and speed up task completion?</h3></div>
         </div>
-        <figure class="figure"><div class="frame"><img src="img/cal-lab.jpg" alt="Participants using the CAL app while wearing eye-tracking glasses" loading="lazy" width="1664" height="937"></div><figcaption>Sessions with Tobii Pro Glasses 2. Journeys: dashboard, transaction search, loan request.</figcaption></figure>
+        <figure class="figure"><div class="frame"><img src="img/cal-lab.jpg" alt="Participants using the CAL app while wearing eye-tracking glasses" loading="lazy" width="1664" height="937"></div><figcaption>Sessions with Tobii Pro Glasses 2, on participants' own phones.</figcaption></figure>
       </div>
     </section>
 
     <section class="cs-sec">
-      <div class="side"><span class="label">Test 1</span><h2>Taking a ₪10,000 loan</h2><p class="muted">Scenario: you're renovating, need ₪10,000, and want to repay ₪500–600 a month using a specific card.</p></div>
+      <div class="side"><span class="label">Method</span><h2>Three tests in one session</h2><p class="muted">Each participant did all three. We recorded heatmaps, gaze paths, time spent on each step, the number of glances it took to find an answer, and whether the task succeeded.</p></div>
+      <div class="main">
+        <div class="cols three">
+          <div class="note"><span class="k">Test 1 · Task</span><h3>Take a loan</h3><p>"You're renovating and need ₪10,000. You'd like to repay ₪500–600 a month. Take the loan on your Visa Platinum FLY CARD ending 8844."</p></div>
+          <div class="note"><span class="k">Test 2 · Free look</span><h3>The multi-card screen</h3><p>Participants saw the screen and described, in their own words, what they saw.</p></div>
+          <div class="note"><span class="k">Test 3 · Question</span><h3>The dashboard</h3><p>"What's the total charge on March 2, 2019?"</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cs-sec">
+      <div class="side"><span class="label">Test 1</span><h2>Taking a ₪10,000 loan</h2><p class="muted">Everyone finished in under two minutes. The interesting part was where the time and attention went.</p></div>
       <div class="main">
         <div class="dots-row">
           <span class="mono muted">How 15 people started the loan</span>
           <div class="dots" aria-label="13 from the dashboard button, 1 from the floating plus, 1 from the menu"><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="b"></i><i class="c"></i></div>
           <div class="legend"><span><i style="background:var(--accent)"></i>13 · "Request Instant Loan" on the dashboard (2 needed guidance)</span><span><i style="background:var(--ink-2)"></i>1 · floating plus</span><span><i style="box-shadow:inset 0 0 0 1.5px var(--ink-3)"></i>1 · menu → All Actions</span></div>
+          <p class="muted" style="max-width:62ch">13 of 15 noticed the "Request Instant Loan" button on the dashboard. 2 didn't see it at all.</p>
         </div>
-        <figure class="figure"><div class="frame"><img src="img/cal-heatstrip.jpg" alt="Heatmaps across every screen of the loan flow" loading="lazy" width="1800" height="432"></div><figcaption>Heatmaps across the flow, read right to left: card selection → amount → installments → purpose → disclosure → completion.</figcaption></figure>
-        <div class="bars" role="img" aria-label="Share of attention by stage: card selection 23%, installments 19%, loan amount 17%, disclosure 16%, completion 14%, purpose 9%, loader 2%">
-          <span class="mono muted" style="margin-bottom:4px">Share of attention by stage</span>
-          <div class="r hi"><span>Card selection</span><div class="track"><div class="fill" style="--w:92%"></div></div><span class="v">23%</span></div>
-          <div class="r"><span>Installments</span><div class="track"><div class="fill" style="--w:76%"></div></div><span class="v">19%</span></div>
-          <div class="r"><span>Loan amount</span><div class="track"><div class="fill" style="--w:68%"></div></div><span class="v">17%</span></div>
-          <div class="r"><span>Disclosure</span><div class="track"><div class="fill" style="--w:64%"></div></div><span class="v">16%</span></div>
-          <div class="r"><span>Completion</span><div class="track"><div class="fill" style="--w:56%"></div></div><span class="v">14%</span></div>
-          <div class="r"><span>Purpose</span><div class="track"><div class="fill" style="--w:36%"></div></div><span class="v">9%</span></div>
-          <div class="r"><span>Loader</span><div class="track"><div class="fill" style="--w:8%"></div></div><span class="v">2%</span></div>
-          <div class="scale"><span></span><div><span>0%</span><span>5%</span><span>10%</span><span>15%</span><span>20%</span><span>25%</span></div><span></span></div>
+        <div class="times" aria-label="Task completion time">
+          <div><span class="mono muted">Average</span><b>1:41</b></div>
+          <div><span class="mono muted">Fastest</span><b>1:09</b></div>
+          <div><span class="mono muted">Slowest</span><b>1:56</b></div>
         </div>
+        <div class="cols">
+          <div class="bars" role="img" aria-label="Share of attention by stage: card selection 23%, installments 19%, loan amount 17%, disclosure 16%, completion 14%, purpose 9%, loader 2%">
+            <span class="mono muted" style="margin-bottom:4px">Share of attention by stage</span>
+            <div class="r hi"><span>Card selection</span><div class="track"><div class="fill" style="--w:92%"></div></div><span class="v">23%</span></div>
+            <div class="r"><span>Installments</span><div class="track"><div class="fill" style="--w:76%"></div></div><span class="v">19%</span></div>
+            <div class="r"><span>Loan amount</span><div class="track"><div class="fill" style="--w:68%"></div></div><span class="v">17%</span></div>
+            <div class="r"><span>Disclosure</span><div class="track"><div class="fill" style="--w:64%"></div></div><span class="v">16%</span></div>
+            <div class="r"><span>Completion</span><div class="track"><div class="fill" style="--w:56%"></div></div><span class="v">14%</span></div>
+            <div class="r"><span>Purpose</span><div class="track"><div class="fill" style="--w:36%"></div></div><span class="v">9%</span></div>
+            <div class="r"><span>Loader</span><div class="track"><div class="fill" style="--w:8%"></div></div><span class="v">2%</span></div>
+          </div>
+          <div class="bars avg" role="img" aria-label="Average focus time per stage against the 0.68 average: card selection 1.08, loader 0.87, disclosure 0.82, installments 0.81, loan amount 0.65, completion 0.63, purpose 0.61" style="--avg:63%">
+            <span class="mono muted" style="margin-bottom:4px">Focus time per stage · <b style="font-weight:500;color:var(--ink)">|</b> 0.68 avg</span>
+            <div class="r hi"><span>Card selection</span><div class="track"><div class="fill" style="--w:100%"></div></div><span class="v">1.08</span></div>
+            <div class="r"><span>Loader</span><div class="track"><div class="fill" style="--w:81%"></div></div><span class="v">0.87</span></div>
+            <div class="r"><span>Disclosure</span><div class="track"><div class="fill" style="--w:76%"></div></div><span class="v">0.82</span></div>
+            <div class="r"><span>Installments</span><div class="track"><div class="fill" style="--w:75%"></div></div><span class="v">0.81</span></div>
+            <div class="r"><span>Loan amount</span><div class="track"><div class="fill" style="--w:60%"></div></div><span class="v">0.65</span></div>
+            <div class="r"><span>Completion</span><div class="track"><div class="fill" style="--w:58%"></div></div><span class="v">0.63</span></div>
+            <div class="r"><span>Purpose</span><div class="track"><div class="fill" style="--w:56%"></div></div><span class="v">0.61</span></div>
+          </div>
+        </div>
+        <p class="muted" style="max-width:62ch">Card selection took the biggest share of attention and the longest focus of any step: the first sign that something there wasn't clear.</p>
       </div>
+      <figure class="figure wide"><div class="bare"><img src="img/cal-flow-heat.webp" alt="Heatmaps across every screen of the loan flow" loading="lazy" width="2000" height="405"></div><figcaption>Heatmaps across the flow, read right to left: card selection → amount → installments → purpose → disclosure → completion.</figcaption></figure>
     </section>
 
     <section class="cs-sec">
       <div class="side"><span class="label">Findings</span><h2>Where the flow tripped people up</h2></div>
       <div class="main">
-        <div class="cols">
-          <figure class="figure"><div class="frame"><img src="img/cal-cards.jpg" alt="Heatmaps on the card selection screen" loading="lazy" width="1801" height="1073"></div><figcaption>Card selection</figcaption></figure>
-          <div class="note"><span class="k">Card selection</span><h3>Only 2 of 14 found sideways scrolling on their own</h3><p>8 tried scrolling up and down. 4 picked the wrong card, went back to the dashboard, and only on re-entry understood where card choice happens. 1 failed the task.</p></div>
-          <figure class="figure"><div class="frame"><img src="img/cal-keyboard.jpg" alt="Loan amount screen with and without the on-screen keyboard" loading="lazy" width="1365" height="1104"></div><figcaption>Loan amount, keyboard open and closed</figcaption></figure>
-          <div class="note"><span class="k">Keyboard</span><h3>8 of 15 couldn't reach "Continue"</h3><p>The keyboard hid the button and people tried to scroll with half the screen visible.</p></div>
-          <figure class="figure"><div class="frame"><img src="img/cal-almost.jpg" alt="Almost done screen with attention percentages per section" loading="lazy" width="1196" height="1339"></div><figcaption>"Almost done" screen, attention by section</figcaption></figure>
-          <div class="note"><span class="k">Information architecture</span><h3>Scattered focus on "Almost done"</h3><p>Attention spread evenly across sections with no clear entry point, a sign the hierarchy needed work.</p></div>
+        <div class="finding">
+          <figure class="figure"><div class="frame"><img src="img/cal-cards-heat.webp" alt="Heatmaps on the card selection screen for three participants" loading="lazy" width="1398" height="828"></div><figcaption>"Which card?" Attention stayed on the front card's details.</figcaption></figure>
+          <div class="note"><span class="k">01 · Card selection</span><h3>The cards scroll sideways. Most people tried up and down.</h3>
+            <p>10 of 15 understood they could switch cards on this screen. But of the 14 who tried to scroll through the cards:</p>
+            <ul class="tally">
+              <li><b>8</b>scrolled up and down</li>
+              <li><b>3</b>started sideways, then switched to vertical</li>
+              <li><b>2</b>found sideways scrolling on their own</li>
+              <li><b>1</b>tapped the cards in the back before finding it</li>
+            </ul>
+            <p>4 picked the wrong card, went back to the dashboard, and only on re-entry realized the card is chosen here. 1 never found the right card and failed the task.</p></div>
+        </div>
+        <div class="finding">
+          <figure class="figure"><div class="phones two short">
+            <div class="bare"><img src="img/cal-amount.webp" alt="Loan amount screen as designed, with Continue at the bottom" loading="lazy" width="465" height="828"></div>
+            <div class="bare"><img src="img/cal-amount-kb.webp" alt="The same screen with the keyboard open, covering Continue" loading="lazy" width="465" height="828"></div>
+          </div><figcaption>Loan amount: as designed, and with the keyboard open.</figcaption></figure>
+          <div class="note"><span class="k">02 · Keyboard</span><h3>8 of 15 couldn't reach "Continue"</h3><p>Once the keyboard opened, it covered the button. People tried to scroll with half the screen visible instead of closing the keyboard.</p></div>
+        </div>
+        <div class="finding">
+          <figure class="figure"><div class="phones one"><div class="bare anno">
+            <img src="img/cal-almost-clean.webp" alt="Almost done screen with the share of attention on each section" loading="lazy" width="473" height="840">
+            <span class="pin l" style="top:36%">14%</span>
+            <span class="pin l" style="top:47%">5%</span>
+            <span class="pin r" style="top:47%">5%</span>
+            <span class="pin r" style="top:58%">15%</span>
+            <span class="pin l" style="top:72%">17%</span>
+            <span class="pin r" style="top:88%">27%</span>
+            <span class="pin l" style="top:97%">14%</span>
+          </div></div><figcaption>"Almost done": share of attention on each section.</figcaption></figure>
+          <div class="note"><span class="k">03 · Information architecture</span><h3>On "Almost done", attention was everywhere</h3><p>Focus spread across every section with no clear entry point. The amount, the terms and the SMS step were all competing, a sign the hierarchy needed work.</p></div>
         </div>
       </div>
     </section>
 
     <section class="cs-sec">
-      <div class="side"><span class="label">Tests 2 &amp; 3</span><h2>Cards beat text. And one thing to leave alone.</h2></div>
+      <div class="side"><span class="label">Test 2</span><h2>Cards beat text</h2><p class="muted">Shown the multi-card screen and asked to describe it, people talked about the cards first.</p></div>
       <div class="main">
         <div class="dots-row">
           <span class="mono muted">Multi-card screen: where attention went</span>
           <div class="split"><div class="s1">Card visuals 60%</div><div class="s2">Text 40%</div></div>
-          <p class="muted" style="max-width:62ch">Recommendation: use the visual card format in more places in the app, replacing text-based elements.</p>
         </div>
-        <div class="dots-row">
-          <span class="mono muted">Dashboard: "What's the total charge on March 2, 2019?"</span>
-          <div class="dots" aria-label="11 answered, 2 struggled, 2 failed"><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="b"></i><i class="b"></i><i class="c"></i><i class="c"></i></div>
-          <div class="legend"><span><i style="background:var(--accent)"></i>11 answered · avg 4 glances</span><span><i style="background:var(--ink-2)"></i>2 struggled · avg 23.5 glances</span><span><i style="box-shadow:inset 0 0 0 1.5px var(--ink-3)"></i>2 failed · avg 51 glances</span></div>
-        </div>
-        <div class="cols">
-          <figure class="figure"><div class="frame"><img src="img/cal-multicard.jpg" alt="Heatmap of the multi-card screen" loading="lazy" width="728" height="2535" style="max-height:620px;object-fit:cover;object-position:top"></div><figcaption>Test 2 heatmap</figcaption></figure>
-          <figure class="figure"><div class="frame"><img src="img/cal-gaze.jpg" alt="Gaze sequences of a quick and a slow participant on the dashboard" loading="lazy" width="1586" height="2704" style="max-height:620px;object-fit:cover;object-position:top"></div><figcaption>Test 3 gaze paths: found it at once vs. many glances</figcaption></figure>
-        </div>
-        <p class="prose big" style="max-width:56ch">Most people found the amount quickly, so we left the dashboard as it was. Knowing what not to change saved a redesign nobody needed.</p>
+        <figure class="figure"><div class="phones one"><div class="bare"><img src="img/cal-dash-heat.webp" alt="Heatmap of the multi-card screen" loading="lazy" width="552" height="1930"></div></div><figcaption>Heatmap: the card images and the totals next to them pulled the most attention.</figcaption></figure>
+        <p class="prose big" style="max-width:56ch">Recommendation: use the visual card format in more places in the app, in place of text-only rows.</p>
       </div>
     </section>
 
     <section class="cs-sec">
-      <div class="side"><span class="label">Outcome</span><h2>What changed</h2></div>
+      <div class="side"><span class="label">Test 3</span><h2>Knowing what not to change</h2><p class="muted">"What's the total charge on March 2, 2019?" The answer, ₪18,603, sits at the top of the dashboard.</p></div>
+      <div class="main">
+        <div class="dots-row">
+          <span class="mono muted">15 participants</span>
+          <div class="dots" aria-label="11 answered, 2 struggled, 2 failed"><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="b"></i><i class="b"></i><i class="c"></i><i class="c"></i></div>
+          <div class="legend"><span><i style="background:var(--accent)"></i>11 answered · avg 4 glances</span><span><i style="background:var(--ink-2)"></i>2 struggled · avg 23.5 glances</span><span><i style="box-shadow:inset 0 0 0 1.5px var(--ink-3)"></i>2 failed · avg 51 glances</span></div>
+        </div>
+        <figure class="figure"><div class="phones two">
+          <div class="bare"><img src="img/cal-dash-fast.webp" alt="Gaze of a participant who found the total at first glance" loading="lazy" width="552" height="1930"></div>
+          <div class="bare"><img src="img/cal-dash-gaze.webp" alt="Gaze path of a participant who needed dozens of glances" loading="lazy" width="552" height="1930"></div>
+        </div><figcaption>Found it at first glance, and the long way round: dozens of fixations across the cards before landing on the total.</figcaption></figure>
+        <p class="prose big" style="max-width:56ch">Most people found the amount quickly, and one found it at first glance. So we left the dashboard as it was: knowing what not to change saved a redesign nobody needed.</p>
+      </div>
+    </section>
+
+    <section class="cs-sec">
+      <div class="side"><span class="label">Recommendations</span><h2>From findings to design</h2><p class="muted">What each finding pointed to, screen by screen.</p></div>
       <div class="main">
         <ol class="principles">
-          <li><div><b>Button placement</b><span>Key actions moved to where people actually looked for them.</span></div></li>
-          <li><div><b>Essential content highlighted</b><span>The information each step depends on got visual priority.</span></div></li>
-          <li><div><b>Information architecture</b><span>Screens with scattered focus were restructured around a clear entry point.</span></div></li>
+          <li><div><b>Make the card carousel look like a carousel</b><span>Let the next card peek in from the side so sideways swiping is obvious, and let a tap on a card in the back bring it forward.</span></div></li>
+          <li><div><b>Keep "Continue" in reach</b><span>Dock the main action above the keyboard, so the next step stays visible while typing an amount.</span></div></li>
+          <li><div><b>One entry point on "Almost done"</b><span>Lead with the amount and the repayment, follow with the main action, and group the terms below it, with microcopy that says one thing per section.</span></div></li>
+          <li><div><b>Lead with the card</b><span>Following Test 2, use the card visual wherever people need to recognize a card, as on the single-card dashboard below.</span></div></li>
+          <li><div><b>Leave the dashboard total alone</b><span>Test 3 showed it already works for most people.</span></div></li>
         </ol>
+        <figure class="figure"><div class="phones one"><div class="bare"><img src="img/cal-single.webp" alt="Single-card dashboard led by a large visual of the card and its next charge" loading="lazy" width="478" height="1001"></div></div><figcaption>The single-card dashboard: the card visual carries the key numbers.</figcaption></figure>
         <p class="muted" style="max-width:62ch">Part of my redesign of CAL's mobile app and self-service journeys, which raised digital adoption and card issuance and generated multi-million-shekel revenue.</p>
       </div>
     </section>

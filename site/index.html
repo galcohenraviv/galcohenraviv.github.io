@@ -515,19 +515,31 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
 .lit .w { transition: opacity .25s linear; }
 
 /* ---------- VoiceMind V2: live prototype, centred at the bottom with a caption per screen ---------- */
-.proto { border-top: 1px solid var(--line); padding-block: clamp(32px, 4vw, 56px) clamp(48px, 7vw, 96px); display: grid; gap: 18px; }
-.proto-text { display: grid; gap: 14px; }
-.proto-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 24px; }
-.proto-ctrl { display: flex; align-items: center; gap: 6px; min-width: 0; }
-.proto-steps { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
-.proto-steps button, .proto-arr {
-  font: 500 .78rem/1 var(--f-mono); color: var(--ink-2); background: transparent; border: 1px solid var(--line);
-  border-radius: 999px; padding: 7px 11px; cursor: pointer; transition: background-color .25s, color .25s, border-color .25s;
+.proto {
+  --barH: 61px;
+  border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 14px;
+  height: calc(100svh - var(--barH)); min-height: 560px; padding-block: 14px 18px;
 }
-.proto-arr { padding: 7px 10px; }
-.proto-steps button:hover, .proto-arr:hover { border-color: var(--ink-3); color: var(--ink); }
+.proto-text { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; flex: none; }
+.proto-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 14px; }
+.proto-ctrl { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.proto-steps { display: flex; flex-wrap: wrap; gap: 4px; min-width: 0; }
+.proto-steps button, .proto-arr, .proto-tog, .proto-open {
+  font: 500 .78rem/1 var(--f-mono); color: var(--ink-2); background: transparent; border: 1px solid var(--line);
+  border-radius: 999px; padding: 7px 9px; cursor: pointer; text-decoration: none; white-space: nowrap;
+  transition: background-color .25s, color .25s, border-color .25s;
+}
+.proto-arr { padding: 7px 9px; }
+.proto-tools { display: flex; gap: 2px; margin-right: auto; }
+.proto-tools > * { border-color: transparent; }
+.proto-steps button:hover, .proto-arr:hover, .proto-tog:hover, .proto-open:hover { border-color: var(--ink-3); color: var(--ink); }
 .proto-steps button[aria-current="step"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
-.proto-cap { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 4px clamp(20px, 4vw, 64px); align-items: baseline; }
+/* the caption collapses to nothing and the prototype grows into the space */
+.proto-capwrap { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .45s var(--ease), opacity .3s; }
+.proto-capwrap > .proto-cap { overflow: hidden; min-height: 0; }
+.proto.no-text .proto-capwrap { grid-template-rows: 0fr; opacity: 0; }
+.proto.no-text .proto-cap { padding-top: 0; }
+.proto-cap { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 4px clamp(20px, 4vw, 64px); align-items: baseline; padding-top: 14px; transition: padding-top .45s var(--ease); }
 .proto-n { grid-column: 1; grid-row: 1; font-size: .75rem; color: var(--accent); }
 .proto-t { grid-column: 1; grid-row: 2; font-size: clamp(1.3rem, 1rem + 1vw, 1.9rem); letter-spacing: -0.03em; line-height: 1.1; }
 .proto-d { grid-column: 2; grid-row: 1 / span 2; align-self: end; font-size: var(--step-0); line-height: 1.5; color: var(--ink); max-width: 68ch; margin: 0; }
@@ -536,27 +548,31 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
 .proto-cap.swap > * { animation: proto-in .5s var(--ease) both; }
 .proto-cap.swap > :nth-child(2) { animation-delay: .04s; } .proto-cap.swap > :nth-child(3) { animation-delay: .08s; } .proto-cap.swap > :nth-child(4) { animation-delay: .12s; }
 @keyframes proto-in { from { opacity: 0; transform: translateY(8px); } }
-.proto-stage { display: grid; justify-items: center; gap: 12px; padding-inline: clamp(16px, 2.5vw, 40px); }
+.proto-stage { flex: 1 1 auto; min-height: 0; display: flex; justify-content: center; align-items: flex-start; padding-inline: clamp(16px, 2.5vw, 40px); }
 .proto-screen {
-  position: relative; width: var(--pw, 100%); border-radius: 14px; overflow: hidden; background: #F6F7F9;
+  position: relative; width: var(--pw, 100%); border-radius: 14px; overflow: hidden; background: #F6F7F9; transform-origin: 50% 100%;
   border: 1px solid var(--line); box-shadow: 0 30px 80px -40px color-mix(in oklab, var(--ink) 55%, transparent), 0 2px 6px -2px color-mix(in oklab, var(--ink) 18%, transparent);
 }
 .proto-screen .pv-bar { position: relative; display: block; height: 26px; background: var(--paper-2); border-bottom: 1px solid var(--line); }
 .proto-vp { position: relative; width: 100%; height: var(--ph, 70svh); overflow: hidden; }
 .proto-vp iframe { position: absolute; left: 0; top: 0; border: 0; width: var(--iw, 100%); height: var(--ih, 100%); transform-origin: 0 0; transform: scale(var(--ps, 1)); background: #F6F7F9; }
-.proto-nav { width: var(--pw, 100%); display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: .78rem; color: var(--ink-3); }
-.proto-open { color: var(--ink-2); text-decoration: none; }
-.proto-open:hover { color: var(--accent); }
+/* arriving: the screen grows from a smaller card to full size as the section scrolls into place */
+@supports (animation-timeline: view()) {
+  .proto-screen { animation: proto-grow linear both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
+  @keyframes proto-grow { from { transform: scale(.82) translateY(40px); opacity: .4; border-radius: 22px; } }
+}
 @media (max-width: 760px) {
+  .proto { height: auto; min-height: 0; padding-block: 28px 40px; }
   .proto-cap { grid-template-columns: 1fr; }
   .proto-n, .proto-t, .proto-d, .proto-try { grid-column: 1; grid-row: auto; }
-  .proto-top { display: grid; }
-  .proto-ctrl { margin-inline: -16px; padding-inline: 16px; }
-  .proto-steps { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .proto-ctrl { flex: 1 0 100%; margin-inline: -16px; padding-inline: 16px; }
+  .proto-screen { animation: none; }
+  .proto-steps { flex: 1 1 auto; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
   .proto-steps button { flex: none; }
-  .proto-nav span { display: none; }
+  .proto-open { display: none; }
+  .proto-tools { margin-right: -9px; }
 }
-@media (prefers-reduced-motion: reduce) { .proto-cap.swap > * { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .proto-cap.swap > * { animation: none; } .proto-screen { animation: none; } .proto-capwrap { transition: none; } }
 /* zoomable screenshots */
 .zoomable { cursor: zoom-in; position: relative; }
 .zoomable::after {
@@ -942,17 +958,23 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
     <div class="wrap proto-text">
       <div class="proto-top">
         <span class="label">Live prototype</span>
+        <div class="proto-tools">
+          <button type="button" class="proto-tog" aria-expanded="true" aria-controls="protoCap">Hide text</button>
+          <a class="proto-open" href="vm/Main.dc.html" target="_blank" rel="noopener">Full screen ↗</a>
+        </div>
         <div class="proto-ctrl">
           <button type="button" class="proto-arr" data-go="-1" aria-label="Previous screen">←</button>
           <nav class="proto-steps" aria-label="Prototype screens"></nav>
           <button type="button" class="proto-arr" data-go="1" aria-label="Next screen">→</button>
         </div>
       </div>
-      <div class="proto-cap" aria-live="polite">
-        <span class="proto-n mono"></span>
-        <h2 class="proto-t"></h2>
-        <p class="proto-d"></p>
-        <p class="proto-try"></p>
+      <div class="proto-capwrap" id="protoCap">
+        <div class="proto-cap" aria-live="polite">
+          <span class="proto-n mono"></span>
+          <h2 class="proto-t"></h2>
+          <p class="proto-d"></p>
+          <p class="proto-try"></p>
+        </div>
       </div>
     </div>
     <div class="proto-stage">
@@ -960,7 +982,6 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
         <i class="pv-bar" aria-hidden="true"></i>
         <div class="proto-vp"><iframe id="vmFrame" title="VoiceMind interactive prototype" src="vm/Main.dc.html" loading="lazy"></iframe></div>
       </div>
-      <div class="proto-nav"><span class="mono">Click anything that looks clickable. The caption follows you.</span><a class="proto-open mono" href="vm/Main.dc.html" target="_blank" rel="noopener">Open full screen ↗</a></div>
     </div>
   </section>
 
@@ -1366,17 +1387,15 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
       show(SCREENS.findIndex(sc => sc[0] === e.data.vmScreen));
     });
     show(0);
-    // size: as wide as the stage allows and as tall as the window leaves under the caption.
-    // The design is rendered at a desktop width (at least 1280 logical px) and scaled to fit; phones get the fluid layout.
+    // size: the section is exactly one screen tall (under the sticky header); the prototype takes every pixel the
+    // caption leaves. The design renders at a desktop width (at least 1280 logical px) and is scaled to fit.
+    const bar = document.querySelector('.bar'), stage = sec.querySelector('.proto-stage');
     function fit() {
-      const stage = sec.querySelector('.proto-stage');
+      sec.style.setProperty('--barH', (bar ? bar.offsetHeight : 61) + 'px');
       const cs = getComputedStyle(stage);
-      const w = Math.min(1520, stage.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight));
-      const capH = sec.querySelector('.proto-text').offsetHeight;
-      const navH = sec.querySelector('.proto-nav').offsetHeight;
-      const room = innerHeight - 64 - 18 - capH - 18 - 26 - 12 - navH - 16;   // header, gaps, caption, window bar, nav
+      const w = Math.min(1600, stage.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight));
       const phone = w < 720;
-      const h = Math.round(phone ? innerHeight * .72 : Math.max(440, room));
+      const h = Math.round(phone ? innerHeight * .72 : Math.max(300, stage.clientHeight - 26 - 2));
       const scale = phone ? 1 : Math.min(1, w / 1280);
       sec.style.setProperty('--pw', Math.round(w) + 'px');
       sec.style.setProperty('--ph', h + 'px');
@@ -1385,9 +1404,34 @@ figcaption { font-family: var(--f-mono); font-size: .78rem; color: var(--ink-3);
       sec.style.setProperty('--ih', Math.round(h / scale) + 'px');
     }
     fit();
-    new ResizeObserver(fit).observe(sec);
+    new ResizeObserver(fit).observe(stage);
     addEventListener('resize', fit);
     addEventListener('hashchange', () => requestAnimationFrame(fit));
+
+    // hide / show the caption; the prototype grows into the freed space
+    const tog = sec.querySelector('.proto-tog');
+    tog.addEventListener('click', () => {
+      const hide = !sec.classList.contains('no-text');
+      sec.classList.toggle('no-text', hide);
+      tog.textContent = hide ? 'Show text' : 'Hide text';
+      tog.setAttribute('aria-expanded', String(!hide));
+    });
+
+    // arriving: once the section is a third into view while scrolling down, settle it exactly under the header,
+    // so the whole prototype is on screen without scrolling further
+    let lastY = scrollY, armed = true, snapping = false;
+    addEventListener('scroll', () => {
+      const down = scrollY > lastY; lastY = scrollY;
+      if (snapping || innerWidth <= 760 || sec.closest('[hidden]')) return;
+      const r = sec.getBoundingClientRect(), barH = bar ? bar.offsetHeight : 0;
+      if (r.top > innerHeight * .85 || r.bottom < barH) { armed = true; return; }     // well away: ready for the next arrival
+      if (!armed || !down) return;
+      if (r.top > barH + 2 && r.top < innerHeight * .7) {
+        armed = false; snapping = true;
+        scrollTo({ top: scrollY + r.top - barH, behavior: reduce ? 'auto' : 'smooth' });
+        setTimeout(() => { snapping = false; lastY = scrollY; }, 700);
+      }
+    }, { passive: true });
   })();
 
   /* ---------- lightbox ---------- */

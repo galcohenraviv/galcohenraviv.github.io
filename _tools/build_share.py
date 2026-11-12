@@ -36,10 +36,6 @@ for d in ('lm', 'sw', 'er'):
 swaps = [
     ('(await (await fetch(`${dir}/case.txt`)).text())', '(__ENC[`${dir}/case.txt`])'),
     ('b64(await (await fetch(`${dir}/${img.dataset.enc}.txt`)).text())', 'b64(__ENC[`${dir}/${img.dataset.enc}.txt`])'),
-    # the VoiceMind V2 prototype is a folder of pages, so the single file loads it from the live site
-    ("const VM = 'vm/';", "const VM = 'https://galcohenraviv.github.io/vm/';"),
-    ('src="vm/Main.dc.html"', 'src="https://galcohenraviv.github.io/vm/Main.dc.html"'),
-    ('href="vm/Main.dc.html"', 'href="https://galcohenraviv.github.io/vm/Main.dc.html"'),
 ]
 for old, new in swaps:
     assert s.count(old) == 1, old
